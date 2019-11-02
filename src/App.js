@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { HomePage } from './components';
+import { ThemeProvider } from '@material-ui/core/styles';
+import './assets/styles/index.scss';
+import ConsiliumQRouter from './pages/ConsiliumQRouter';
+import consiliumqTheme from './assets/styles/consiliumqTheme';
 
-function App() {
+const App = () => {
     return (
-        <DndProvider backend={HTML5Backend}>
-            <div>
-                <header>
-                    <h1>ConsiliumQ Task Management Platform Frontend</h1>
-                </header>
-                <HomePage />
-            </div>
-        </DndProvider>
+        <ThemeProvider theme={consiliumqTheme}>
+            <DndProvider backend={HTML5Backend}>
+                <ConsiliumQRouter />
+            </DndProvider>
+        </ThemeProvider>
     );
-}
+};
 
 export default App;

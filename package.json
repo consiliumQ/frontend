@@ -5,6 +5,7 @@
   "dependencies": {
     "@frontend/components": "file:src/components",
     "@material-ui/core": "^4.5.0",
+    "@material-ui/icons": "^4.5.1",
     "@material-ui/styles": "^4.5.0",
     "dotenv": "^8.1.0",
     "node-sass": "^4.12.0",
