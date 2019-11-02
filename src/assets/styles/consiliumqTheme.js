@@ -7,16 +7,38 @@ import RubikItalic from '../fonts/Rubik-Italic.woff';
 import RubikLight from '../fonts/Rubik-Light.woff';
 import RubikRegular from '../fonts/Rubik-Regular.woff';
 
-const rubik = {
-    fontFamily: 'Rubik',
-    src: `
-        url(${RubikRegular}) format('woff'),
-        url(${RubikLight}) format('woff'),
-        url(${RubikItalic}) format('woff'),
-        url(${RubikBold}) format('woff'),
-        url(${RubikBlack}) format('woff'),
-    `,
-};
+const rubik = [
+    {
+        fontFamily: 'Rubik',
+        src: `url(${RubikRegular}) format('woff')`,
+        fontWeight: 400,
+        fontStyle: 'normal',
+    },
+    {
+        fontFamily: 'Rubik',
+        src: `url(${RubikLight}) format('woff')`,
+        fontWeight: 100,
+        fontStyle: 'normal',
+    },
+    {
+        fontFamily: 'Rubik',
+        src: `url(${RubikItalic}) format('woff')`,
+        fontWeight: 400,
+        fontStyle: 'italic',
+    },
+    {
+        fontFamily: 'Rubik',
+        src: `url(${RubikBold}) format('woff')`,
+        fontWeight: 700,
+        fontStyle: 'bold',
+    },
+    {
+        fontFamily: 'Rubik',
+        src: `url(${RubikBlack}) format('woff')`,
+        fontWeight: 900,
+        fontStyle: 'normal',
+    },
+];
 
 const fontStack = [
     'Rubik',
@@ -40,7 +62,7 @@ const consiliumqTheme = createMuiTheme({
     overrides: {
         MuiCssBaseline: {
             '@global': {
-                '@font-face': [rubik],
+                '@font-face': rubik,
             },
         },
     },

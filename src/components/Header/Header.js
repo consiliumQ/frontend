@@ -29,7 +29,11 @@ export default function Header(props) {
                     <IconButton edge={'start'} onClick={() => onMenuIconClicked()}>
                         <Menu />
                     </IconButton>
-                    <h1>CQ Kanban</h1>
+                    <h1>
+                        <span style={{ fontWeight: 100, fontStyle: 'italic' }}>CQ</span>
+                        <span> </span>
+                        <span style={{ fontWeight: 700 }}>Kanban</span>
+                    </h1>
                     <div className={classes.spacer} />
                     <Button variant={'contained'} onClick={() => console.log('Place holder button clicked!')} className={classes.flatButton}>
                         {'PlaceHolder'}
