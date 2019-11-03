@@ -1,8 +1,9 @@
-import React from 'react';
-import { Paper, Container, Grid } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Paper, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import { Header } from '../../components';
+import Sidebar from '../../components/Sidebar/Sidebar';
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -18,9 +19,10 @@ const useStyle = makeStyles(theme => ({
 
 const HomePage = props => {
     const classes = useStyle(props);
+    const [shouldSideBarOpen, setSideBarOpen] = useState(false);
     return (
         <>
-            <Header onMenuIconClicked={() => console.log('menu button click')} />
+            <Header onMenuIconClicked={() => setSideBarOpen(!shouldSideBarOpen)} />
             <Grid container>
                 <Grid item xs={3}>
                     <Paper className={classes.root}>
@@ -29,6 +31,7 @@ const HomePage = props => {
                     </Paper>
                 </Grid>
             </Grid>
+            <Sidebar shouldSideBarOpen={shouldSideBarOpen} toggleSideBar={() => setSideBarOpen(!shouldSideBarOpen)} />
         </>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { AppBar, Toolbar, IconButton, makeStyles, Button, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, makeStyles, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
