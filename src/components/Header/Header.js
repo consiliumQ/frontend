@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
-import { AppBar, Toolbar, IconButton, makeStyles, Button } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, makeStyles, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: '#21252b',
         boxShadow: 'none',
     },
     spacer: {
@@ -14,11 +14,24 @@ const useStyles = makeStyles(theme => ({
     flatButton: {
         boxShadow: 'none',
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
+    inputLabel: {
+        color: 'white',
+    },
 }));
 
 export default function Header(props) {
     const appBarRef = useRef(null);
     const classes = useStyles();
+
+    const [project, setProject] = React.useState('');
+
+    const handleProjectSelection = event => {
+        setProject(event.target.value);
+    };
 
     const { onMenuIconClicked } = props;
 
@@ -30,14 +43,20 @@ export default function Header(props) {
                         <Menu />
                     </IconButton>
                     <h1>
-                        <span style={{ fontWeight: 100, fontStyle: 'italic' }}>CQ</span>
-                        <span> </span>
-                        <span style={{ fontWeight: 700 }}>Kanban</span>
+                        <span style={{ fontWeight: 100 }}>consiliumQ</span>
                     </h1>
                     <div className={classes.spacer} />
-                    <Button variant={'contained'} onClick={() => console.log('Place holder button clicked!')} className={classes.flatButton}>
-                        {'PlaceHolder'}
-                    </Button>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-label" className={classes.inputLabel}>
+                            Select Project
+                        </InputLabel>
+                        <Select labelId="demo-simple-select-label" id="demo-simple-select" value={project} onChange={handleProjectSelection}>
+                            {/* Place holders for now  */}
+                            <MenuItem value={10}>Project1</MenuItem>
+                            <MenuItem value={20}>Project2</MenuItem>
+                            <MenuItem value={30}>Project3</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Toolbar>
             </AppBar>
             <Toolbar style={{ height: appBarRef.clientHeight }} />
