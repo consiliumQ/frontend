@@ -8,10 +8,10 @@ import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 
 import mijeong from '../../assets/images/mj.png';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     list: {
         width: 300,
-        backgroundColor: '#21252b',
+        backgroundColor: theme.palette.primary.main,
         flexGrow: 1,
         paddingTop: '3rem',
     },
@@ -23,15 +23,18 @@ const useStyles = makeStyles({
     },
     chip: {
         marginTop: '2rem',
-        backgroundColor: '#3c4049',
-        color: '#d7dae0',
+        backgroundColor: theme.palette.primary.contrastText,
+        color: theme.palette.primary.light,
         fontSize: '130%',
     },
     listItem: {
-        color: '#d7dae0',
+        color: theme.palette.primary.contrastText,
         fontSize: '110%',
     },
-});
+    divider: {
+        backgroundColor: theme.palette.primary.contrastText,
+    },
+}));
 
 // Divide case into Loggedin, !Loggedin
 // Loggedin -> Actual Profile
@@ -45,7 +48,7 @@ export default function SideBar(props) {
                 <Grid container justify="center" alignItems="center">
                     <Avatar alt="prettymj" src={mijeong} className={classes.bigAvatar} />
                 </Grid>
-                <Divider />
+                <Divider className={classes.divider} />
                 <Grid container justify="center" alignItems="center">
                     <Chip className={classes.chip} label="Overview" />
                 </Grid>
@@ -59,7 +62,7 @@ export default function SideBar(props) {
                         </ListItem>
                     ))}
                 </List>
-                <Divider />
+                <Divider className={classes.divider} />
                 <Grid container justify="center" alignItems="center">
                     <Chip className={classes.chip} label="Your Projects" />
                 </Grid>
@@ -71,7 +74,7 @@ export default function SideBar(props) {
                         </ListItem>
                     ))}
                 </List>
-                <Divider />
+                <Divider className={classes.divider} />
                 <List>
                     {['Account Setting'].map((text, index) => (
                         <ListItem button key={text}>
