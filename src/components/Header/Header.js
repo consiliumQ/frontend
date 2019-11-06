@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { AppBar, Toolbar, IconButton, makeStyles, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Button, makeStyles } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
@@ -18,8 +18,16 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         minWidth: 120,
     },
-    inputLabel: {
-        color: 'white',
+    button: {
+        boxShadow: 'none',
+        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.primary.contrastText,
+        '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+        },
+    },
+    icon: {
+        color: theme.palette.primary.contrastText,
     },
 }));
 
@@ -27,39 +35,25 @@ export default function Header(props) {
     const appBarRef = useRef(null);
     const classes = useStyles();
 
-    const [project, setProject] = React.useState('');
-
-    const handleProjectSelection = event => {
-        setProject(event.target.value);
-    };
-
     const { onMenuIconClicked } = props;
 
     return (
         <React.Fragment>
-            <AppBar ref={appBarRef} position={'fixed'} className={classes.root}>
+            <AppBar ref={appBarRef} position={'sticky'} className={classes.root}>
                 <Toolbar>
                     <IconButton edge={'start'} onClick={() => onMenuIconClicked()}>
-                        <Menu />
+                        <Menu className={classes.icon} />
                     </IconButton>
                     <h1>
                         <span style={{ fontWeight: 100 }}>consiliumQ</span>
                     </h1>
                     <div className={classes.spacer} />
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-simple-select-label" className={classes.inputLabel}>
-                            Select Project
-                        </InputLabel>
-                        <Select labelId="demo-simple-select-label" id="demo-simple-select" value={project} onChange={handleProjectSelection}>
-                            {/* Place holders for now  */}
-                            <MenuItem value={10}>Project1</MenuItem>
-                            <MenuItem value={20}>Project2</MenuItem>
-                            <MenuItem value={30}>Project3</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Button variant={'contained'} onClick={() => console.log('should open dialog')} className={classes.button}>
+                        {'Placeholder'}
+                    </Button>
                 </Toolbar>
             </AppBar>
-            <Toolbar style={{ height: appBarRef.clientHeight }} />
+            {/* <Toolbar style={{ height: appBarRef.height }} /> */}
         </React.Fragment>
     );
 }

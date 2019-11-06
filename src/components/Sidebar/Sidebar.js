@@ -13,16 +13,14 @@ const useStyles = makeStyles(theme => ({
         width: 300,
         backgroundColor: theme.palette.primary.main,
         flexGrow: 1,
-        paddingTop: '3rem',
     },
     bigAvatar: {
         margin: 10,
         width: 120,
         height: 120,
-        marginBottom: '3rem',
     },
     chip: {
-        marginTop: '2rem',
+        marginTop: theme.spacing(2),
         backgroundColor: theme.palette.primary.contrastText,
         color: theme.palette.primary.light,
         fontSize: '130%',
@@ -32,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         fontSize: '110%',
     },
     divider: {
-        backgroundColor: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary.light,
     },
 }));
 
@@ -44,13 +42,13 @@ export default function SideBar(props) {
 
     return (
         <Drawer className={classes.drawer} open={props.shouldSideBarOpen} onClose={() => props.toggleSideBar()}>
-            <div className={classes.list} role="presentation">
-                <Grid container justify="center" alignItems="center">
-                    <Avatar alt="prettymj" src={mijeong} className={classes.bigAvatar} />
+            <div className={classes.list} role={'presentation'}>
+                <Grid container justify={'center'} alignItems={'center'}>
+                    <Avatar alt={'prettymj'} src={mijeong} className={classes.bigAvatar} />
                 </Grid>
                 <Divider className={classes.divider} />
-                <Grid container justify="center" alignItems="center">
-                    <Chip className={classes.chip} label="Overview" />
+                <Grid container justify={'center'} alignItems={'center'}>
+                    <Chip className={classes.chip} label={'Overview'} />
                 </Grid>
                 <List>
                     {['Visualization', 'Backlogs'].map((text, index) => (
@@ -63,8 +61,8 @@ export default function SideBar(props) {
                     ))}
                 </List>
                 <Divider className={classes.divider} />
-                <Grid container justify="center" alignItems="center">
-                    <Chip className={classes.chip} label="Your Projects" />
+                <Grid container justify={'center'} alignItems={'center'}>
+                    <Chip className={classes.chip} label={'Your Projects'} />
                 </Grid>
                 <List>
                     {['Project1', 'Project'].map((text, index) => (
