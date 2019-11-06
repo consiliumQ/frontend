@@ -37,7 +37,7 @@ export default function Header(props) {
 
     return (
         <React.Fragment>
-            <AppBar ref={appBarRef} position={'fixed'} className={classes.root}>
+            <AppBar ref={appBarRef} position={'sticky'} className={classes.root}>
                 <Toolbar>
                     <IconButton edge={'start'} onClick={() => onMenuIconClicked()}>
                         <Menu />
@@ -59,7 +59,7 @@ export default function Header(props) {
                     </FormControl>
                 </Toolbar>
             </AppBar>
-            <Toolbar style={{ height: appBarRef.clientHeight }} />
+            {/* <Toolbar style={{ height: appBarRef.height }} /> */}
         </React.Fragment>
     );
 }
