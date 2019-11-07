@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
     buttonColumn: {
         minWidth: theme.projectColumnWidth,
         padding: 5,
+        borderLeft: `1px solid ${theme.palette.primary.light}`,
         borderRight: `1px solid ${theme.palette.primary.light}`,
         display: 'flex',
     },
