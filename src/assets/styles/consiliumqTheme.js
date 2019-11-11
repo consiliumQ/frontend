@@ -68,6 +68,7 @@ const consiliumqTheme = createMuiTheme({
             main: '#4834d4',
         },
     },
+    projectColumnWidth: 355,
     overrides: {
         MuiCssBaseline: {
             '@global': {
