@@ -1,10 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useDrag, useDrop } from 'react-dnd';
 import { makeStyles, List, ListSubheader } from '@material-ui/core';
-import * as itemTypes from '../../dnd/dndItemTypes';
-import { TaskCard } from '..';
-import { columns } from '../../assets/DummyData';
+import { DnDTaskCard } from '.';
+import { columns } from '../assets/DummyData';
 
 const useStyles = makeStyles(theme => ({
     kanbanColumn: {
@@ -34,19 +32,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function KanbanColumn({ isLastColumn, columnId }) {
-    const classes = useStyles({ isLastColumn });
     const column = columns.find(col => col.id === columnId);
-
-    const kanbanColRef = useRef(null);
-    // const [, drag] = useDrag()
-    const [, drop] = useDrop({
-        accept: itemTypes.DND_TASK_CARD,
-        drop: (item, monitor) => {
-            console.log('Some nested drop target handle the drop', monitor.didDrop());
-        },
-    });
-
-    drop(kanbanColRef);
+    const classes = useStyles({ isLastColumn });
 
     const ColumnHeader = () => (
         <ListSubheader className={classes.columnHeader} disableGutters>
@@ -55,13 +42,11 @@ export default function KanbanColumn({ isLastColumn, columnId }) {
     );
 
     return (
-        <div ref={kanbanColRef} className={classes.kanbanColumn}>
-            <List subheader={<ColumnHeader />} className={classes.tasksContainer}>
-                {column.taskList.map((taskId, index) => (
-                    <TaskCard key={taskId} taskId={taskId} currIndex={index} />
-                ))}
-            </List>
-        </div>
+        <List subheader={<ColumnHeader />} className={classes.tasksContainer}>
+            {column.taskList.map((taskId, idx) => (
+                <DnDTaskCard taskId={taskId} columnId={columnId} currIndex={idx} />
+            ))}
+        </List>
     );
 }
 
@@ -71,5 +56,4 @@ KanbanColumn.defaultProps = {
 
 KanbanColumn.propTypes = {
     isLastColumn: PropTypes.bool,
-    columnId: PropTypes.string.isRequired,
 };
