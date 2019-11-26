@@ -6,7 +6,7 @@ import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
 import AppsOutlinedIcon from '@material-ui/icons/AppsOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 
-import mijeong from '../../assets/images/mj.png';
+import mijeong from '../assets/images/mj.png';
 
 const useStyles = makeStyles(theme => ({
     list: {

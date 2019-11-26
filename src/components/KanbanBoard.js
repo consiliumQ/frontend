@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import { KanbanColumn } from '..';
-import { project } from '../../assets/DummyData';
+import { KanbanColumn } from '.';
+import { project } from '../assets/DummyData';
+import { CardPostionProvider, CardPosition } from '../tempDataContext';
 
 const useStyles = makeStyles(theme => ({
     horizontalColumnList: {
@@ -38,8 +39,8 @@ const useStyles = makeStyles(theme => ({
 // this behavior mimics the Project feature of GitHub, but the performance is a little concerning
 const useBoardHeight = () => {
     const [boardHeight, setBoardHeight] = useState(window.innerHeight - 85);
-
     const setBoardHeightOnListen = () => setBoardHeight(window.innerHeight - 85);
+
     useEffect(() => {
         window.addEventListener('resize', setBoardHeightOnListen);
         return () => {
@@ -50,15 +51,17 @@ const useBoardHeight = () => {
     return boardHeight;
 };
 
-export default function KanbanBoard() {
+function KanbanBoard() {
     // TODO: receive data from GraphQL server
+    const { cardPositionState } = useContext(CardPosition);
+    console.log(cardPositionState);
     const classes = useStyles();
     const boardHeight = useBoardHeight();
 
     return (
         <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
-            {project.columns.map((columnId, index) => (
-                <KanbanColumn isLastColumn={index === project.columns.length - 1} key={columnId} columnId={columnId} />
+            {cardPositionState.map((colSchema, index) => (
+                <KanbanColumn isLastColumn={index === cardPositionState.length - 1} key={colSchema.id} colSchema={colSchema} />
             ))}
             <div className={classes.buttonColumn}>
                 <Button
@@ -73,3 +76,9 @@ export default function KanbanBoard() {
         </div>
     );
 }
+
+export default () => (
+    <CardPostionProvider>
+        <KanbanBoard />
+    </CardPostionProvider>
+);
