@@ -1,11 +1,9 @@
 import React, { useRef, useContext } from 'react';
-import PropTypes, { any } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useDrag, useDrop } from 'react-dnd';
 import { makeStyles, List, ListSubheader } from '@material-ui/core';
 import * as itemTypes from '../dnd/dndItemTypes';
 import { TaskCard } from '.';
-import { columns } from '../assets/DummyData';
-import { types, CardPosition } from '../tempDataContext';
 
 const useStyles = makeStyles(theme => ({
     kanbanColumn: {
@@ -34,19 +32,9 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function KanbanColumn({ isLastColumn, colSchema }) {
-    const { id: columnId, tasks: taskList } = colSchema;
-    const column = columns.find(col => col.id === columnId);
-
+export default function KanbanColumn({ isLastColumn, column }) {
+    const { tasks } = column;
     const classes = useStyles({ isLastColumn });
-
-    const kanbanColRef = useRef(null);
-    const [, drop] = useDrop({
-        accept: itemTypes.DND_TASK_CARD,
-        drop: () => {},
-    });
-
-    drop(kanbanColRef);
 
     const ColumnHeader = () => (
         <ListSubheader className={classes.columnHeader} disableGutters>
@@ -55,10 +43,10 @@ export default function KanbanColumn({ isLastColumn, colSchema }) {
     );
 
     return (
-        <div ref={kanbanColRef} className={classes.kanbanColumn}>
+        <div className={classes.kanbanColumn}>
             <List subheader={<ColumnHeader />} className={classes.tasksContainer}>
-                {taskList.map((taskId, index) => (
-                    <TaskCard key={taskId} taskId={taskId} columnId={columnId} currIndex={index} />
+                {tasks.map((task, index) => (
+                    <TaskCard key={task._id} task={task} currIndex={index} />
                 ))}
             </List>
         </div>
