@@ -29,6 +29,7 @@
         "prettier/prettier": ["error", { "singleQuote": true }],
         "strict": 0,
         "class-methods-use-this": "off",
+        "consistent-return": "off",
         "lines-between-class-members": "off",
         "no-underscore-dangle": 0,
         "no-nested-ternary": "off",

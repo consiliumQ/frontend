@@ -38,8 +38,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function TaskCard({ taskId }) {
-    const task = tasks.find(tsk => tsk.id === taskId);
+export default function TaskCard({ task }) {
     const classes = useStyles();
 
     return (
@@ -59,7 +58,3 @@ export default function TaskCard({ taskId }) {
         </Card>
     );
 }
-
-TaskCard.propTypes = {
-    taskId: PropTypes.string.isRequired,
-};
