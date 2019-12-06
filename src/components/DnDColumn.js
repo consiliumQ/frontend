@@ -4,18 +4,19 @@ import { useDrag, useDrop } from 'react-dnd';
 import * as itemTypes from '../dnd/dndItemTypes';
 import { KanbanColumn } from '.';
 
-export default function DnDColumn({ isLastColumn, column }) {
+export default function DnDColumn({ isLastColumn, column, dndOperation }) {
     const kanbanColRef = useRef(null);
-    const [, drop] = useDrop({
+    const { dispatchDnd, types } = dndOperation;
+    const [, dropCard] = useDrop({
         accept: itemTypes.DND_TASK_CARD,
         drop: () => {},
     });
 
-    drop(kanbanColRef);
+    dropCard(kanbanColRef);
 
     return (
         <div ref={kanbanColRef}>
-            <KanbanColumn isLastColumn={isLastColumn} column={column} />
+            <KanbanColumn isLastColumn={isLastColumn} column={column} dndOperation={dndOperation} />
         </div>
     );
 }

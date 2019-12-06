@@ -3,8 +3,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { queries } from '../graphql';
 
 /**
- * - `{ type: MOVE_CARD, data: { dragColIdx, dropColIdx, dragIdx, dropIdx }  }`
- * - `{ type: MOVE_COLUMN, data: { dragColIdx, dropColIdx } }`
+ * - `{ type: MOVE_CARD, data: { dragColId, dropColId, dragId, dropId }  }`
+ * - `{ type: MOVE_COLUMN, data: { dragColId, dropColId } }`
  */
 const types = {
     MOVE_CARD: 'move_card',
@@ -13,18 +13,24 @@ const types = {
 
 const moveCardReducer = (state, action) => {
     const newState = [...state];
-    const { dragColIdx, dropColIdx, dragIdx, dropIdx } = action.data;
+    const { dragId, dropId } = action.data;
+
+    const dragColIndex = newState.findIndex(c => c.tasks.find(t => t._id === dragId));
+    const dropColIndex = newState.findIndex(c => c.tasks.find(t => t._id === dropId));
+    const dragIndex = dragId && newState[dragColIndex].tasks.findIndex(t => t._id === dragId);
+    const dropIndex = dropId && newState[dropColIndex].tasks.findIndex(t => t._id === dropId);
+
     switch (action.type) {
         case types.MOVE_CARD:
-            if (dragColIdx === dropColIdx) {
-                newState[dragColIdx].tasks.splice(dropIdx, 0, newState[dragColIdx].tasks.splice(dragIdx, 1)[0]);
+            if (dragColIndex === dropColIndex) {
+                newState[dragColIndex].tasks.splice(dropIndex, 0, newState[dragColIndex].tasks.splice(dragIndex, 1)[0]);
             } else {
-                newState[dropColIdx].tasks.splice(dropIdx, 0, newState[dragColIdx].tasks[dragIdx]);
-                newState[dragColIdx].tasks.splice(dragIdx, 1);
+                newState[dropColIndex].tasks.splice(dropIndex, 0, newState[dragColIndex].tasks[dragIndex]);
+                newState[dragColIndex].tasks.splice(dragIndex, 1);
             }
             return newState;
         case types.MOVE_COLUMNS:
-            newState.splice(dropColIdx, 0, newState.splice(dragColIdx, 1));
+            newState.splice(dropColIndex, 0, newState.splice(dragColIndex, 1));
             return newState;
         case 'init':
             return action.data;
@@ -45,5 +51,5 @@ export default function useDndOperation() {
         }
     }, [data]);
 
-    return [columnsState, dispatchDnd, types];
+    return [columnsState, { dispatchDnd, types }];
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useDndOperation, useBoardHeight } from '../hooks';
@@ -39,12 +39,12 @@ function KanbanBoard() {
 
     const classes = useStyles();
     const boardHeight = useBoardHeight();
-    const [columnsState, dispatchDnd, types] = useDndOperation();
+    const [columnsState, dndOperation] = useDndOperation();
 
     return (
         <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
             {columnsState.map((column, index) => (
-                <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} />
+                <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} dndOperation={dndOperation} />
             ))}
             <div className={classes.buttonColumn}>
                 <Button
