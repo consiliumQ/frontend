@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     addColumnModalContent: {
         minWidth: theme.modalWidth,
     },
+    paper: {},
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -66,7 +67,17 @@ function KanbanBoard() {
                 <Button startIcon={<Add />} variant={'contained'} onClick={handleAddColumnOpen} className={classes.addColumnButton}>
                     {'Add Column'}
                 </Button>
-                <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={handleAddColumnClose}>
+                <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleAddColumnClose}
+                    PaperProps={{
+                        classes: {
+                            root: classes.paper,
+                        },
+                    }}
+                >
                     <DialogTitle>{'Create New Column'}</DialogTitle>
                     <DialogContent className={classes.addColumnModalContent}>
                         <div>
