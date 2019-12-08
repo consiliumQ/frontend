@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/styles": "^4.5.0",
     "apollo-boost": "^0.4.4",
+    "d3": "^5.14.2",
     "d3-array": "2.4.0",
     "d3-axis": "1.0.12",
     "d3-brush": "1.1.5",
