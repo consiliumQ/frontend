@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { ListItem } from '@material-ui/core';
-import * as itemTypes from '../dnd/dndItemTypes';
+import * as itemTypes from './common/DnDTypes';
 import { TaskCard } from '.';
 
 export default function DnDTaskCard({ task, dndOperation }) {

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import * as itemTypes from '../dnd/dndItemTypes';
+import * as itemTypes from './common/DnDTypes';
 import { KanbanColumn } from '.';
 
 export default function DnDColumn({ isLastColumn, column, dndOperation }) {
@@ -30,10 +30,37 @@ export default function DnDColumn({ isLastColumn, column, dndOperation }) {
         drop: () => {},
     });
 
-    dropCard(ref);
+    const [{ isDragging }, drag] = useDrag({
+        item: { type: itemTypes.DND_TASK_COLUMN, columnId: column._id },
+        collect: monitor => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+    const [, drop] = useDrop({
+        accept: itemTypes.DND_TASK_COLUMN,
+        hover: (item, monitor) => {
+            if (ref.current) {
+                if (item.columnId !== column._id) {
+                    const dropColRef = ref.current;
+                    const dropColRect = dropColRef.getBoundingClientRect();
+
+                    const { x: mouseX, y: mouseY } = monitor.getClientOffset();
+
+                    if (dropColRect.left < mouseX < dropColRect.right && dropColRect.top < mouseY < dropColRect.bottom) {
+                        dispatchDnd({
+                            type: types.MOVE_COLUMN,
+                            data: { dragColId: item.columnId, dropColId: column._id },
+                        });
+                    }
+                }
+            }
+        },
+    });
+
+    drag(drop(dropCard(ref)));
 
     return (
-        <div ref={ref}>
+        <div ref={ref} style={{ opacity: isDragging ? 0 : 1 }}>
             <KanbanColumn isLastColumn={isLastColumn} column={column} dndOperation={dndOperation} />
         </div>
     );
