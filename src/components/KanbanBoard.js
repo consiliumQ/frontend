@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     addColumnModalContent: {
         minWidth: theme.modalWidth,
     },
+    paper: {},
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
