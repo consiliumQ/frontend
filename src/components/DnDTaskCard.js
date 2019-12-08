@@ -1,15 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { ListItem } from '@material-ui/core';
 import * as itemTypes from './common/DnDTypes';
 import { TaskCard } from '.';
 
-export default function DnDTaskCard({ task, dndOperation }) {
+export default function DnDTaskCard({ task, dndOperation = {} }) {
     const ref = useRef(null);
     const { dispatchDnd, types } = dndOperation;
 
-    const [{ isDragging }, drag] = useDrag({
-        item: { type: itemTypes.DND_TASK_CARD, taskId: task._id, columnId: task.column._id },
+    const [{ isDragging }, drag, preview] = useDrag({
+        item: { type: itemTypes.DND_TASK_CARD, taskId: task._id },
         isDragging: monitor => task._id === monitor.getItem().taskId,
         collect: monitor => ({
             isDragging: monitor.isDragging(),
@@ -35,6 +36,10 @@ export default function DnDTaskCard({ task, dndOperation }) {
             }
         },
     });
+
+    useEffect(() => {
+        preview(getEmptyImage(), { captureDraggingState: true });
+    }, []);
 
     drag(drop(ref));
 

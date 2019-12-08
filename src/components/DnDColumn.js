@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import * as itemTypes from './common/DnDTypes';
 import { KanbanColumn } from '.';
 
-export default function DnDColumn({ isLastColumn, column, dndOperation }) {
+export default function DnDColumn({ isLastColumn, column, dndOperation = {} }) {
     const ref = useRef(null);
     const { dispatchDnd, types } = dndOperation;
     const [, dropCard] = useDrop({
@@ -30,7 +31,7 @@ export default function DnDColumn({ isLastColumn, column, dndOperation }) {
         drop: () => {},
     });
 
-    const [{ isDragging }, drag] = useDrag({
+    const [{ isDragging }, drag, preview] = useDrag({
         item: { type: itemTypes.DND_TASK_COLUMN, columnId: column._id },
         collect: monitor => ({
             isDragging: monitor.isDragging(),
@@ -56,6 +57,10 @@ export default function DnDColumn({ isLastColumn, column, dndOperation }) {
             }
         },
     });
+
+    useEffect(() => {
+        preview(getEmptyImage(), { captureDraggingState: true });
+    }, []);
 
     drag(drop(dropCard(ref)));
 

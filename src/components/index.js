@@ -5,3 +5,4 @@ export { default as DnDTaskCard } from './DnDTaskCard';
 export { default as DnDColumn } from './DnDColumn';
 export { default as KanbanColumn } from './KanbanColumn';
 export { default as KanbanBoard } from './KanbanBoard';
+export { default as CustomDragLayer } from './CustomDragLayer';

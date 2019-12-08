@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useDndOperation, useBoardHeight } from '../hooks';
-import { DnDColumn } from '.';
+import { DnDColumn, CustomDragLayer } from '.';
 
 const useStyles = makeStyles(theme => ({
     horizontalColumnList: {
@@ -42,21 +42,24 @@ function KanbanBoard() {
     const [columnsState, dndOperation] = useDndOperation();
 
     return (
-        <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
-            {columnsState.map((column, index) => (
-                <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} dndOperation={dndOperation} />
-            ))}
-            <div className={classes.buttonColumn}>
-                <Button
-                    startIcon={<Add />}
-                    variant={'contained'}
-                    onClick={() => console.log('Add Column Button Click!')}
-                    className={classes.addColumnButton}
-                >
-                    {'Add Column'}
-                </Button>
+        <>
+            <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
+                {columnsState.map((column, index) => (
+                    <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} dndOperation={dndOperation} />
+                ))}
+                <div className={classes.buttonColumn}>
+                    <Button
+                        startIcon={<Add />}
+                        variant={'contained'}
+                        onClick={() => console.log('Add Column Button Click!')}
+                        className={classes.addColumnButton}
+                    >
+                        {'Add Column'}
+                    </Button>
+                </div>
             </div>
-        </div>
+            <CustomDragLayer columnsState={columnsState} />
+        </>
     );
 }
 
