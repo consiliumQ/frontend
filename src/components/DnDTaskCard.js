@@ -1,5 +1,4 @@
-import React, { useRef, useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { ListItem } from '@material-ui/core';
 import * as itemTypes from '../dnd/dndItemTypes';
@@ -28,7 +27,7 @@ export default function DnDTaskCard({ task, dndOperation }) {
 
                     if (dropCardRect.left < mouseX < dropCardRect.right && dropCardRect.top < mouseY < dropCardRect.bottom) {
                         dispatchDnd({
-                            type: types.MOVE_CARD,
+                            type: types.MOVE_CARD_ON_CARD,
                             data: { dragId: item.taskId, dropId: task._id },
                         });
                     }

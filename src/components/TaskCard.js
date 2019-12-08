@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Card, CardContent, CardActions, IconButton, makeStyles } from '@material-ui/core';
 import { EditOutlined, MoreVertOutlined } from '@material-ui/icons';
-import { tasks } from '../assets/DummyData';
 
 const useStyles = makeStyles(theme => ({
     cardContainer: {

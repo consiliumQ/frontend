@@ -12,7 +12,7 @@ export default function CustomDragLayer() {
 
     const renderItem = () => {
         switch (itemType) {
-            case types.MOVE_CARD:
+            case types.MOVE_CARD_ON_CARD:
                 return <TaskCard />;
             default:
                 return null;

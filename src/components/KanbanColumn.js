@@ -1,14 +1,13 @@
-import React, { useRef, useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useDrag, useDrop } from 'react-dnd';
 import { makeStyles, List, ListSubheader } from '@material-ui/core';
-import * as itemTypes from '../dnd/dndItemTypes';
-import { TaskCard, DnDTaskCard } from '.';
+import { DnDTaskCard } from '.';
 
 const useStyles = makeStyles(theme => ({
     kanbanColumn: {
         borderLeft: `1px solid ${theme.palette.primary.light}`,
         minWidth: theme.projectColumnWidth,
+        height: '100%',
         overflow: 'auto',
     },
     tasksContainer: {
@@ -45,7 +44,7 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation }) {
     return (
         <div className={classes.kanbanColumn}>
             <List subheader={<ColumnHeader />} className={classes.tasksContainer}>
-                {tasks.map((task, index) => (
+                {tasks.map(task => (
                     <DnDTaskCard key={task._id} task={task} dndOperation={dndOperation} />
                 ))}
             </List>

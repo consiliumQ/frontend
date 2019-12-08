@@ -3,31 +3,38 @@ import { useQuery } from '@apollo/react-hooks';
 import { queries } from '../graphql';
 
 /**
- * - `{ type: MOVE_CARD, data: { dragColId, dropColId, dragId, dropId }  }`
+ * - `{ type: MOVE_CARD_ON_CARD, data: { dragColId, dropColId, dragId, dropId }  }`
  * - `{ type: MOVE_COLUMN, data: { dragColId, dropColId } }`
  */
 const types = {
-    MOVE_CARD: 'move_card',
+    MOVE_CARD_ON_CARD: 'move_card_on_card',
+    MOVE_CARD_ON_LIST: 'move_card_on_list',
     MOVE_COLUMNS: 'move_columns',
 };
 
 const moveCardReducer = (state, action) => {
     const newState = [...state];
-    const { dragId, dropId } = action.data;
+    const { dragId, dropId, dropColId } = action.data;
 
-    const dragColIndex = newState.findIndex(c => c.tasks.find(t => t._id === dragId));
-    const dropColIndex = newState.findIndex(c => c.tasks.find(t => t._id === dropId));
+    const dragColIndex = dragId && newState.findIndex(c => c.tasks.find(t => t._id === dragId));
+    const dropColIndex = dropColId
+        ? newState.findIndex(c => c._id === dropColId)
+        : dropId && newState.findIndex(c => c.tasks.find(t => t._id === dropId));
     const dragIndex = dragId && newState[dragColIndex].tasks.findIndex(t => t._id === dragId);
     const dropIndex = dropId && newState[dropColIndex].tasks.findIndex(t => t._id === dropId);
 
     switch (action.type) {
-        case types.MOVE_CARD:
+        case types.MOVE_CARD_ON_CARD:
             if (dragColIndex === dropColIndex) {
                 newState[dragColIndex].tasks.splice(dropIndex, 0, newState[dragColIndex].tasks.splice(dragIndex, 1)[0]);
             } else {
                 newState[dropColIndex].tasks.splice(dropIndex, 0, newState[dragColIndex].tasks[dragIndex]);
                 newState[dragColIndex].tasks.splice(dragIndex, 1);
             }
+            return newState;
+        case types.MOVE_CARD_ON_LIST:
+            newState[dropColIndex].tasks.push(newState[dragColIndex].tasks[dragIndex]);
+            newState[dragColIndex].tasks.splice(dragIndex, 1);
             return newState;
         case types.MOVE_COLUMNS:
             newState.splice(dropColIndex, 0, newState.splice(dragColIndex, 1));
@@ -38,8 +45,6 @@ const moveCardReducer = (state, action) => {
             return state;
     }
 };
-
-// const useTaskCardDnDReducer = () => useReducer(moveCardReducer, INITIAL_STATE);
 
 export default function useDndOperation() {
     const { data } = useQuery(queries.GET_PROJECT);
