@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Slide, Dialog, DialogActions, DialogTitle, DialogContent, TextField, makeStyles } from '@material-ui/core';
+import React from 'react';
+import { Button, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useDndOperation, useBoardHeight } from '../hooks';
 import { DnDColumn, CustomDragLayer } from '.';
@@ -32,15 +32,7 @@ const useStyles = makeStyles(theme => ({
         borderRight: `1px solid ${theme.palette.primary.light}`,
         display: 'flex',
     },
-    addColumnModalContent: {
-        minWidth: theme.modalWidth,
-    },
-    paper: {},
 }));
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 function KanbanBoard() {
     // TODO: receive data from GraphQL server
@@ -48,72 +40,23 @@ function KanbanBoard() {
     const classes = useStyles();
     const boardHeight = useBoardHeight();
     const [columnsState, dndOperation] = useDndOperation();
-    const [open, setOpen] = useState(false);
-
-    const handleAddColumnOpen = () => {
-        setOpen(true);
-    };
-
-    const handleAddColumnClose = () => {
-        setOpen(false);
-    };
 
     return (
-        <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
-            {columnsState.map((column, index) => (
-                <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} dndOperation={dndOperation} />
-            ))}
-            <div className={classes.buttonColumn}>
-                <Button startIcon={<Add />} variant={'contained'} onClick={handleAddColumnOpen} className={classes.addColumnButton}>
-                    {'Add Column'}
-                </Button>
-                <Dialog
-                    open={open}
-                    TransitionComponent={Transition}
-                    keepMounted
-                    onClose={handleAddColumnClose}
-                    PaperProps={{
-                        classes: {
-                            root: classes.paper,
-                        },
-                    }}
-                >
-                    <DialogTitle>{'Create New Column'}</DialogTitle>
-                    <DialogContent className={classes.addColumnModalContent}>
-                        <div>
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Required"
-                                defaultValue="Title"
-                                className={classes.textField}
-                                margin="normal"
-                                variant="outlined"
-                            />
-                        </div>
-                        <div>
-                            <TextField
-                                id="outlined-full-width"
-                                label="Description"
-                                placeholder="Write a short description"
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                variant="outlined"
-                            />
-                        </div>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleAddColumnClose} color="primary">
-                            Submit
-                        </Button>
-                        <Button onClick={handleAddColumnClose} color="primary">
-                            Cancel
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+        <>
+            <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
+                {columnsState.map((column, index) => (
+                    <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} dndOperation={dndOperation} />
+                ))}
+                <div className={classes.buttonColumn}>
+                    <Button
+                        startIcon={<Add />}
+                        variant={'contained'}
+                        onClick={() => console.log('Add Column Button Click!')}
+                        className={classes.addColumnButton}
+                    >
+                        {'Add Column'}
+                    </Button>
+                </div>
             </div>
             <CustomDragLayer columnsState={columnsState} />
         </>
