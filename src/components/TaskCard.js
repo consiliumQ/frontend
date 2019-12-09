@@ -77,29 +77,21 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function TaskCard({ task }) {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
-    const [open2, setOpen2] = useState(false);
+    const [shouldEditTaskFormOpen, setEditTaskFormOpen] = useState(false);
+    const [shouldDeleteTaskAlertOpen, setDeleteTaskFormOpen] = useState(false);
     const [backlog, setBacklog] = useState('project');
 
     const handleBacklogSelect = event => {
         setBacklog(event.target.value);
     };
 
-    const handleEditTaskOpen = () => {
-        setOpen(true);
-    };
+    const handleEditTaskOpen = () => setEditTaskFormOpen(true);
 
-    const handleEditTaskClose = () => {
-        setOpen(false);
-    };
+    const handleEditTaskClose = () => setEditTaskFormOpen(false);
 
-    const handleDeleteTaskOpen = () => {
-        setOpen2(true);
-    };
+    const handleDeleteTaskOpen = () => setDeleteTaskFormOpen(true);
 
-    const handleDeleteTaskClose = () => {
-        setOpen2(false);
-    };
+    const handleDeleteTaskClose = () => setDeleteTaskFormOpen(false);
 
     return (
         <>
@@ -117,7 +109,7 @@ export default function TaskCard({ task }) {
                     </IconButton>
                 </CardActions>
             </Card>
-            <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={handleEditTaskClose}>
+            <Dialog open={shouldEditTaskFormOpen} TransitionComponent={Transition} keepMounted onClose={handleEditTaskClose}>
                 <DialogTitle>{'Edit Task'}</DialogTitle>
                 <DialogContent className={classes.editTaskModal}>
                     <div>
@@ -187,7 +179,7 @@ export default function TaskCard({ task }) {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Dialog open={open2} onClose={handleDeleteTaskClose}>
+            <Dialog open={shouldDeleteTaskAlertOpen} onClose={handleDeleteTaskClose}>
                 <DialogTitle>{'Alert'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Are you sure you want to delete this task?</DialogContentText>

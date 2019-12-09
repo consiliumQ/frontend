@@ -48,21 +48,26 @@ function KanbanBoard() {
     const classes = useStyles();
     const boardHeight = useBoardHeight();
     const [columnsState, dndOperation] = useDndOperation();
-    const [open, setOpen] = useState(false);
+    const [shouldAddColumnFormOpen, setAddColumnFormOpen] = useState(false);
 
-    const handleAddColumnOpen = () => {
-        setOpen(true);
-    };
+    const { ColumnsState } = dndOperation;
 
-    const handleAddColumnClose = () => {
-        setOpen(false);
-    };
+    const handleAddColumnOpen = () => setAddColumnFormOpen(true);
+
+    const handleAddColumnClose = () => setAddColumnFormOpen(false);
 
     return (
         <>
             <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
-                {columnsState.map((column, index) => (
-                    <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} dndOperation={dndOperation} />
+                {columnsState.map((column, columnIdx) => (
+                    <ColumnsState.Provider key={column._id} value={columnsState}>
+                        <DnDColumn
+                            isLastColumn={columnIdx === columnsState.length - 1}
+                            column={column}
+                            columnIdx={columnIdx}
+                            dndOperation={dndOperation}
+                        />
+                    </ColumnsState.Provider>
                 ))}
                 <div className={classes.buttonColumn}>
                     <Button startIcon={<Add />} variant={'contained'} onClick={handleAddColumnOpen} className={classes.addColumnButton}>
@@ -70,7 +75,7 @@ function KanbanBoard() {
                     </Button>
                 </div>
             </div>
-            <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={handleAddColumnClose}>
+            <Dialog open={shouldAddColumnFormOpen} TransitionComponent={Transition} keepMounted onClose={handleAddColumnClose}>
                 <DialogTitle>{'Create New Column'}</DialogTitle>
                 <DialogContent className={classes.addColumnModalContent}>
                     <div>

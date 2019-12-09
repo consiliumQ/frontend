@@ -1,16 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { ListItem } from '@material-ui/core';
+import { useMutation } from '@apollo/react-hooks';
+import { queries } from '../graphql';
 import * as itemTypes from './common/DnDTypes';
 import { TaskCard } from '.';
 
-export default function DnDTaskCard({ task, dndOperation = {} }) {
+export default function DnDTaskCard({ task, taskIdx, dndOperation = {} }) {
     const ref = useRef(null);
-    const { dispatchDnd, types } = dndOperation;
+    const { dispatchDnd, types, ColumnsState } = dndOperation;
+    const [updateAfterDropCard] = useMutation(queries.MUTATE_TASKCARD_DND);
+    const columnsState = useContext(ColumnsState);
 
     const [{ isDragging }, drag, preview] = useDrag({
-        item: { type: itemTypes.DND_TASK_CARD, taskId: task._id },
+        item: { type: itemTypes.DND_TASK_CARD, taskId: task._id, columnId: task.column._id, taskIdx },
         isDragging: monitor => task._id === monitor.getItem().taskId,
         collect: monitor => ({
             isDragging: monitor.isDragging(),
@@ -33,6 +37,38 @@ export default function DnDTaskCard({ task, dndOperation = {} }) {
                         });
                     }
                 }
+            }
+        },
+        drop: item => {
+            const { taskId, columnId: prevColId, taskIdx: prevTaskIdx } = item;
+
+            const strippedColumns = columnsState.map(c => ({ columnId: c._id, taskIds: c.tasks.map(t => t._id) }));
+            const { taskIds: prevTaskIds } = strippedColumns.find(c => c.columnId === prevColId);
+            const { columnId: currColId, taskIds: currTaskIds } = strippedColumns.find(c => c.taskIds.includes(taskId));
+            const currTaskIdx = currTaskIds.findIndex(tid => tid === taskId);
+
+            if (prevColId === currColId && prevTaskIdx !== currTaskIdx) {
+                updateAfterDropCard({
+                    variables: {
+                        columnId: currColId,
+                        updateColumnObj: { taskIds: currTaskIds },
+                    },
+                });
+            }
+
+            if (prevColId !== currColId) {
+                updateAfterDropCard({
+                    variables: {
+                        columnId: currColId,
+                        updateColumnObj: { taskIds: currTaskIds },
+                    },
+                });
+                updateAfterDropCard({
+                    variables: {
+                        columnId: prevColId,
+                        updateColumnObj: { taskIds: prevTaskIds },
+                    },
+                });
             }
         },
     });

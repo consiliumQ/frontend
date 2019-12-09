@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TaskCardDragPreview = memo(({ task }) => <TaskCard task={task} />);
-const ColumnDragPreview = memo(({ column }) => <KanbanColumn column={column} />);
+const ColumnDragPreview = memo(({ column }) => <KanbanColumn column={column} isPreview />);
 
 export default function CustomDragLayer({ columnsState }) {
     const { item, itemType, isDragging, currentOffset } = useDragLayer(monitor => ({

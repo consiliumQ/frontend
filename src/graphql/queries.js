@@ -8,6 +8,9 @@ export const GET_PROJECT = gql`
                 _id
                 name
                 description
+                project {
+                    _id
+                }
                 tasks {
                     _id
                     title
@@ -17,6 +20,22 @@ export const GET_PROJECT = gql`
                     }
                 }
             }
+        }
+    }
+`;
+
+export const MUTATE_TASKCARD_DND = gql`
+    mutation mutateTaskCardDnd($columnId: ID!, $updateColumnObj: UpdateColumn) {
+        updateColumn(columnId: $columnId, updateColumnObj: $updateColumnObj) {
+            _id
+        }
+    }
+`;
+
+export const MUTATE_TASKCOL_DND = gql`
+    mutation mutateTaskColDnd($projectId: ID!, $updateProjectObj: UpdateProject) {
+        updateProject(projectId: $projectId, updateProjectObj: $updateProjectObj) {
+            _id
         }
     }
 `;

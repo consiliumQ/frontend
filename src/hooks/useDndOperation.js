@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, createContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { queries } from '../graphql';
 
@@ -11,6 +11,8 @@ const types = {
     MOVE_CARD_ON_LIST: 'move_card_on_list',
     MOVE_COLUMN: 'move_column',
 };
+
+const ColumnsState = createContext(null);
 
 const moveCardReducer = (state, action) => {
     const newState = [...state];
@@ -59,5 +61,5 @@ export default function useDndOperation() {
         }
     }, [data]);
 
-    return [columnsState, { dispatchDnd, types }];
+    return [columnsState, { dispatchDnd, types, ColumnsState }];
 }

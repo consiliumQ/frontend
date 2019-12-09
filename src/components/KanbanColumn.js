@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, List, ListSubheader } from '@material-ui/core';
-import { DnDTaskCard } from '.';
+import { DnDTaskCard, TaskCard } from '.';
 
 const useStyles = makeStyles(theme => ({
     kanbanColumn: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function KanbanColumn({ isLastColumn, column, dndOperation }) {
+export default function KanbanColumn({ isLastColumn, column, dndOperation, isPreview }) {
     const { tasks } = column;
     const classes = useStyles({ isLastColumn });
 
@@ -44,9 +44,13 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation }) {
     return (
         <div className={classes.kanbanColumn}>
             <List subheader={<ColumnHeader />} className={classes.tasksContainer}>
-                {tasks.map(task => (
-                    <DnDTaskCard key={task._id} task={task} dndOperation={dndOperation} />
-                ))}
+                {tasks.map((task, taskIdx) =>
+                    isPreview ? (
+                        <TaskCard key={`${task._id}-preview`} task={task} />
+                    ) : (
+                        <DnDTaskCard key={task._id} task={task} taskIdx={taskIdx} dndOperation={dndOperation} />
+                    ),
+                )}
             </List>
         </div>
     );
@@ -54,8 +58,10 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation }) {
 
 KanbanColumn.defaultProps = {
     isLastColumn: false,
+    isPreview: false,
 };
 
 KanbanColumn.propTypes = {
     isLastColumn: PropTypes.bool,
+    isPreview: PropTypes.bool,
 };

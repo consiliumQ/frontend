@@ -1,12 +1,18 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
+import { useMutation } from '@apollo/react-hooks';
+import { queries } from '../graphql';
 import * as itemTypes from './common/DnDTypes';
 import { KanbanColumn } from '.';
 
-export default function DnDColumn({ isLastColumn, column, dndOperation = {} }) {
+export default function DnDColumn({ isLastColumn, column, columnIdx, dndOperation = {} }) {
     const ref = useRef(null);
-    const { dispatchDnd, types } = dndOperation;
+    const { dispatchDnd, types, ColumnsState } = dndOperation;
+    const [updateAfterDropCard] = useMutation(queries.MUTATE_TASKCARD_DND);
+    const [updateAfterDropColumn] = useMutation(queries.MUTATE_TASKCOL_DND);
+    const columnsState = useContext(ColumnsState);
+
     const [, dropCard] = useDrop({
         accept: itemTypes.DND_TASK_CARD,
         hover: (item, monitor) => {
@@ -28,11 +34,44 @@ export default function DnDColumn({ isLastColumn, column, dndOperation = {} }) {
                 }
             }
         },
-        drop: () => {},
+        drop: (item, monitor) => {
+            if (!monitor.didDrop()) {
+                const { taskId, columnId: prevColId, taskIdx: prevTaskIdx } = item;
+
+                const strippedColumns = columnsState.map(c => ({ columnId: c._id, taskIds: c.tasks.map(t => t._id) }));
+                const { taskIds: prevTaskIds } = strippedColumns.find(c => c.columnId === prevColId);
+                const { columnId: currColId, taskIds: currTaskIds } = strippedColumns.find(c => c.taskIds.includes(taskId));
+                const currTaskIdx = currTaskIds.findIndex(tid => tid === taskId);
+
+                if (prevColId === currColId && prevTaskIdx !== currTaskIdx) {
+                    updateAfterDropCard({
+                        variables: {
+                            columnId: currColId,
+                            updateColumnObj: { taskIds: currTaskIds },
+                        },
+                    });
+                }
+
+                if (prevColId !== currColId) {
+                    updateAfterDropCard({
+                        variables: {
+                            columnId: currColId,
+                            updateColumnObj: { taskIds: currTaskIds },
+                        },
+                    });
+                    updateAfterDropCard({
+                        variables: {
+                            columnId: prevColId,
+                            updateColumnObj: { taskIds: prevTaskIds },
+                        },
+                    });
+                }
+            }
+        },
     });
 
     const [{ isDragging }, drag, preview] = useDrag({
-        item: { type: itemTypes.DND_TASK_COLUMN, columnId: column._id },
+        item: { type: itemTypes.DND_TASK_COLUMN, columnId: column._id, columnIdx },
         collect: monitor => ({
             isDragging: monitor.isDragging(),
         }),
@@ -54,6 +93,22 @@ export default function DnDColumn({ isLastColumn, column, dndOperation = {} }) {
                         });
                     }
                 }
+            }
+        },
+        drop: item => {
+            const { columnId, columnIdx: prevColIdx } = item;
+            const {
+                project: { _id: projectId },
+            } = column;
+            const currColIdx = columnsState.findIndex(c => c._id === columnId);
+
+            if (prevColIdx !== currColIdx) {
+                updateAfterDropColumn({
+                    variables: {
+                        projectId,
+                        updateProjectObj: { columnIds: columnsState.map(c => c._id) },
+                    },
+                });
             }
         },
     });
