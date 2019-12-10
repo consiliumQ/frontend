@@ -11,9 +11,11 @@ const useStyles = makeStyles(theme => ({
     textField: {},
 }));
 
+const EMPTY_COLUMN_DATA = { name: '', description: '' };
+
 export default function AddColumnDialog({ shouldAddColumnFormOpen, handleAddColumnToggle }) {
     const classes = useStyles();
-    const [newColumnData, setNewColumnData] = useState({ name: '', description: '' });
+    const [newColumnData, setNewColumnData] = useState({ ...EMPTY_COLUMN_DATA });
     const [addColumnMutation, { client }] = useMutation(queries.MUTATE_ADD_COLUMN);
 
     const onAddColumnFormSubmit = e => {
@@ -24,6 +26,7 @@ export default function AddColumnDialog({ shouldAddColumnFormOpen, handleAddColu
         } = client.readQuery({ query: queries.GET_PROJECT_ID_FROM_CACHE });
         addColumnMutation({ variables: { ...newColumnData, projectId } });
 
+        setNewColumnData({ ...EMPTY_COLUMN_DATA });
         handleAddColumnToggle();
     };
 

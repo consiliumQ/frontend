@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, makeStyles, Toolbar } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useDndOperation, useBoardHeight } from '../hooks';
-import { DnDColumn, CustomDragLayer, AddColumnDialog, AddTaskDialog } from '.';
+import { DnDColumn, CustomDragLayer, AddColumnDialog } from '.';
 
 const useStyles = makeStyles(theme => ({
     horizontalColumnList: {
@@ -48,21 +48,11 @@ function KanbanBoard() {
     const boardHeight = useBoardHeight();
     const [columnsState, dndOperation] = useDndOperation();
     const [shouldAddColumnFormOpen, setAddColumnFormOpen] = useState(false);
-    const [shouldAddTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
 
     const { ColumnsState } = dndOperation;
 
-    const ProjectToolBar = () => (
-        <Toolbar variant={'dense'} className={classes.projectToolBar} disableGutters>
-            <Button startIcon={<Add />} variant={'contained'} onClick={() => setAddTaskDialogOpen(!shouldAddTaskDialogOpen)}>
-                {'Add new Task'}
-            </Button>
-        </Toolbar>
-    );
-
     return (
         <>
-            <ProjectToolBar />
             <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
                 {columnsState.map((column, columnIdx) => (
                     <ColumnsState.Provider key={column._id} value={columnsState}>
@@ -88,10 +78,6 @@ function KanbanBoard() {
             <AddColumnDialog
                 shouldAddColumnFormOpen={shouldAddColumnFormOpen}
                 handleAddColumnToggle={() => setAddColumnFormOpen(!shouldAddColumnFormOpen)}
-            />
-            <AddTaskDialog
-                shouldAddTaskDialogOpen={shouldAddTaskDialogOpen}
-                toggleAddTaskDialog={() => setAddTaskDialogOpen(!shouldAddTaskDialogOpen)}
             />
             <CustomDragLayer columnsState={columnsState} />
         </>

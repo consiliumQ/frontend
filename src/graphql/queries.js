@@ -49,8 +49,8 @@ export const MUTATE_ADD_COLUMN = gql`
 `;
 
 export const MUTATE_ADD_TASK = gql`
-    mutation mutateAddTask($name: String!, $description: String, $projectId: ID!, $columnId: ID) {
-        addTask(name: $name, description: $description, projectId: $projectId, columnId: $columnId) {
+    mutation mutateAddTask($title: String!, $description: String, $projectId: ID!, $columnId: ID) {
+        addTask(title: $title, description: $description, projectId: $projectId, columnId: $columnId) {
             _id
         }
     }
