@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Slide, Dialog, DialogActions, DialogTitle, DialogContent, TextField, makeStyles } from '@material-ui/core';
+import { Button, makeStyles, Toolbar } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useDndOperation, useBoardHeight } from '../hooks';
-import { DnDColumn, CustomDragLayer } from '.';
+import { DnDColumn, CustomDragLayer, AddColumnDialog, AddTaskDialog } from '.';
 
 const useStyles = makeStyles(theme => ({
     horizontalColumnList: {
@@ -36,28 +36,33 @@ const useStyles = makeStyles(theme => ({
         minWidth: theme.modalWidth,
     },
     paper: {},
+    projectToolBar: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+        borderBottom: `1px solid ${theme.palette.primary.light}`,
+    },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
-
 function KanbanBoard() {
-    // TODO: receive data from GraphQL server
-
     const classes = useStyles();
     const boardHeight = useBoardHeight();
     const [columnsState, dndOperation] = useDndOperation();
     const [shouldAddColumnFormOpen, setAddColumnFormOpen] = useState(false);
+    const [shouldAddTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
 
     const { ColumnsState } = dndOperation;
 
-    const handleAddColumnOpen = () => setAddColumnFormOpen(true);
-
-    const handleAddColumnClose = () => setAddColumnFormOpen(false);
+    const ProjectToolBar = () => (
+        <Toolbar variant={'dense'} className={classes.projectToolBar} disableGutters>
+            <Button startIcon={<Add />} variant={'contained'} onClick={() => setAddTaskDialogOpen(!shouldAddTaskDialogOpen)}>
+                {'Add new Task'}
+            </Button>
+        </Toolbar>
+    );
 
     return (
         <>
+            <ProjectToolBar />
             <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
                 {columnsState.map((column, columnIdx) => (
                     <ColumnsState.Provider key={column._id} value={columnsState}>
@@ -70,48 +75,24 @@ function KanbanBoard() {
                     </ColumnsState.Provider>
                 ))}
                 <div className={classes.buttonColumn}>
-                    <Button startIcon={<Add />} variant={'contained'} onClick={handleAddColumnOpen} className={classes.addColumnButton}>
+                    <Button
+                        startIcon={<Add />}
+                        variant={'contained'}
+                        onClick={() => setAddColumnFormOpen(!shouldAddColumnFormOpen)}
+                        className={classes.addColumnButton}
+                    >
                         {'Add Column'}
                     </Button>
                 </div>
             </div>
-            <Dialog open={shouldAddColumnFormOpen} TransitionComponent={Transition} keepMounted onClose={handleAddColumnClose}>
-                <DialogTitle>{'Create New Column'}</DialogTitle>
-                <DialogContent className={classes.addColumnModalContent}>
-                    <div>
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Required"
-                            defaultValue="Title"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="outlined-full-width"
-                            label="Description"
-                            placeholder="Write a short description"
-                            fullWidth
-                            margin="normal"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            variant="outlined"
-                        />
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleAddColumnClose} color="primary">
-                        Submit
-                    </Button>
-                    <Button onClick={handleAddColumnClose} color="primary">
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <AddColumnDialog
+                shouldAddColumnFormOpen={shouldAddColumnFormOpen}
+                handleAddColumnToggle={() => setAddColumnFormOpen(!shouldAddColumnFormOpen)}
+            />
+            <AddTaskDialog
+                shouldAddTaskDialogOpen={shouldAddTaskDialogOpen}
+                toggleAddTaskDialog={() => setAddTaskDialogOpen(!shouldAddTaskDialogOpen)}
+            />
             <CustomDragLayer columnsState={columnsState} />
         </>
     );
