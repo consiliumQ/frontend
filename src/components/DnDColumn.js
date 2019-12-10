@@ -46,8 +46,7 @@ export default function DnDColumn({ isLastColumn, column, columnIdx, dndOperatio
                 if (prevColId === currColId && prevTaskIdx !== currTaskIdx) {
                     updateAfterDropCard({
                         variables: {
-                            columnId: currColId,
-                            updateColumnObj: { taskIds: currTaskIds },
+                            updateColumnObj: [{ columnId: currColId, taskIds: currTaskIds }],
                         },
                     });
                 }
@@ -55,14 +54,7 @@ export default function DnDColumn({ isLastColumn, column, columnIdx, dndOperatio
                 if (prevColId !== currColId) {
                     updateAfterDropCard({
                         variables: {
-                            columnId: currColId,
-                            updateColumnObj: { taskIds: currTaskIds },
-                        },
-                    });
-                    updateAfterDropCard({
-                        variables: {
-                            columnId: prevColId,
-                            updateColumnObj: { taskIds: prevTaskIds },
+                            updateColumnArray: [{ columnId: currColId, taskIds: currTaskIds }, { columnId: prevColId, taskIds: prevTaskIds }],
                         },
                     });
                 }

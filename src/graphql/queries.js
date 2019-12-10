@@ -25,8 +25,8 @@ export const GET_PROJECT = gql`
 `;
 
 export const MUTATE_TASKCARD_DND = gql`
-    mutation mutateTaskCardDnd($columnId: ID!, $updateColumnObj: UpdateColumn) {
-        updateColumn(columnId: $columnId, updateColumnObj: $updateColumnObj) {
+    mutation mutateTaskCardDnd($updateColumnArray: [UpdateColumn]) {
+        updateColumn(updateColumnArray: $updateColumnArray) {
             _id
         }
     }
