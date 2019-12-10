@@ -39,3 +39,27 @@ export const MUTATE_TASKCOL_DND = gql`
         }
     }
 `;
+
+export const MUTATE_ADD_COLUMN = gql`
+    mutation mutateAddColumn($name: String!, $projectId: ID!, $description: String!) {
+        addColumn(name: $name, projectId: $projectId, description: $description) {
+            _id
+        }
+    }
+`;
+
+export const MUTATE_ADD_TASK = gql`
+    mutation mutateAddTask($name: String!, $description: String, $projectId: ID!, $columnId: ID) {
+        addTask(name: $name, description: $description, projectId: $projectId, columnId: $columnId) {
+            _id
+        }
+    }
+`;
+
+export const GET_PROJECT_ID_FROM_CACHE = gql`
+    query getProjectIdFromCache {
+        project {
+            _id
+        }
+    }
+`;

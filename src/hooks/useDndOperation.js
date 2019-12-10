@@ -52,7 +52,7 @@ const moveCardReducer = (state, action) => {
 };
 
 export default function useDndOperation() {
-    const { data } = useQuery(queries.GET_PROJECT);
+    const { data } = useQuery(queries.GET_PROJECT, { pollInterval: 500 });
     const [columnsState, dispatchDnd] = useReducer(moveCardReducer, []);
 
     useEffect(() => {
