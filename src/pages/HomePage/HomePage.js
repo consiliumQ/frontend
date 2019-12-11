@@ -9,13 +9,11 @@ const HomePage = () => {
     const { ColumnsState } = dndOperation;
 
     return (
-        <>
-            <ColumnsState.Provider value={columnsState}>
-                <Header dndOperation={dndOperation} onMenuIconClicked={() => setSideBarOpen(!shouldSideBarOpen)} />
-                <KanbanBoard dndOperation={dndOperation} />
-                <SideBar shouldSideBarOpen={shouldSideBarOpen} toggleSideBar={() => setSideBarOpen(!shouldSideBarOpen)} />
-            </ColumnsState.Provider>
-        </>
+        <ColumnsState.Provider value={columnsState}>
+            <Header dndOperation={dndOperation} onMenuIconClicked={() => setSideBarOpen(!shouldSideBarOpen)} />
+            <KanbanBoard dndOperation={dndOperation} />
+            <SideBar shouldSideBarOpen={shouldSideBarOpen} toggleSideBar={() => setSideBarOpen(!shouldSideBarOpen)} />
+        </ColumnsState.Provider>
     );
 };
 

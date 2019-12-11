@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemIcon, makeStyles } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemIcon, makeStyles } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
 import { useQuery } from '@apollo/react-hooks';
 import { queries } from '../graphql';

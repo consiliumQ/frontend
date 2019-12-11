@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, List, ListSubheader, Toolbar, IconButton } from '@material-ui/core';
+import { makeStyles, List, ListSubheader, IconButton } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { DnDTaskCard, TaskCard, AddTaskDialog } from '.';
 
