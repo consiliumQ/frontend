@@ -23,7 +23,7 @@ export default function AddColumnDialog({ shouldAddColumnFormOpen, handleAddColu
 
         const {
             project: { _id: projectId },
-        } = client.readQuery({ query: queries.GET_PROJECT_ID_FROM_CACHE });
+        } = client.readQuery({ query: queries.GET_PROJECT_INFO_FROM_CACHE });
         addColumnMutation({ variables: { ...newColumnData, projectId } });
 
         setNewColumnData({ ...EMPTY_COLUMN_DATA });

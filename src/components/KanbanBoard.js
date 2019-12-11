@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import { useDndOperation, useBoardHeight } from '../hooks';
@@ -43,26 +43,22 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function KanbanBoard() {
+function KanbanBoard({ dndOperation }) {
     const classes = useStyles();
     const boardHeight = useBoardHeight();
-    const [columnsState, dndOperation] = useDndOperation();
+    const columnsState = useContext(dndOperation.ColumnsState);
     const [shouldAddColumnFormOpen, setAddColumnFormOpen] = useState(false);
-
-    const { ColumnsState } = dndOperation;
 
     return (
         <>
             <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
                 {columnsState.map((column, columnIdx) => (
-                    <ColumnsState.Provider key={column._id} value={columnsState}>
-                        <DnDColumn
-                            isLastColumn={columnIdx === columnsState.length - 1}
-                            column={column}
-                            columnIdx={columnIdx}
-                            dndOperation={dndOperation}
-                        />
-                    </ColumnsState.Provider>
+                    <DnDColumn
+                        isLastColumn={columnIdx === columnsState.length - 1}
+                        column={column}
+                        columnIdx={columnIdx}
+                        dndOperation={dndOperation}
+                    />
                 ))}
                 <div className={classes.buttonColumn}>
                     <Button

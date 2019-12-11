@@ -10,3 +10,4 @@ export { default as AddColumnDialog } from './AddColumnDialog';
 export { default as EditTaskDialog } from './EditTaskDialog';
 export { default as DeleteTaskAlertDialog } from './DeleteTaskAlertDialog';
 export { default as AddTaskDialog } from './AddTaskDialog';
+export { default as ProjectSelectorDialog } from './ProejctSelectorDialog';

@@ -22,7 +22,7 @@ export default function AddTaskDialog({ shouldAddTaskDialogOpen, toggleAddTaskDi
 
         const {
             project: { _id: projectId },
-        } = client.readQuery({ query: queries.GET_PROJECT_ID_FROM_CACHE });
+        } = client.readQuery({ query: queries.GET_PROJECT_INFO_FROM_CACHE });
         addTaskMutation({ variables: { ...newTaskData, projectId } });
 
         setNewTaskData({ ...EMPTY_TASK_DATA, columnId });

@@ -1,9 +1,10 @@
 import { gql } from 'apollo-boost';
 
 export const GET_PROJECT = gql`
-    query getProject {
-        project {
+    query getProject($projectId: ID) {
+        project(projectId: $projectId) {
             _id
+            name
             columns {
                 _id
                 name
@@ -19,6 +20,19 @@ export const GET_PROJECT = gql`
                         _id
                     }
                 }
+            }
+        }
+    }
+`;
+
+export const GET_USER_INFO = gql`
+    query getUserInfo {
+        user {
+            _id
+            username
+            projects {
+                _id
+                name
             }
         }
     }
@@ -94,10 +108,11 @@ export const MUTATE_DELETE_TASK = gql`
     }
 `;
 
-export const GET_PROJECT_ID_FROM_CACHE = gql`
+export const GET_PROJECT_INFO_FROM_CACHE = gql`
     query getProjectIdFromCache {
         project {
             _id
+            name
         }
     }
 `;
