@@ -62,7 +62,7 @@ export default function TaskCard({ task }) {
                 </CardActions>
             </Card>
             <EditTaskDialog
-                task={task}
+                taskId={task._id}
                 shouldEditTaskFormOpen={shouldEditTaskFormOpen}
                 handleEditTaskFormToggle={() => setEditTaskFormOpen(!shouldEditTaskFormOpen)}
             />

@@ -24,6 +24,28 @@ export const GET_PROJECT = gql`
     }
 `;
 
+export const GET_TASK_DETAIL = gql`
+    query getTaskDetail($taskId: ID!) {
+        task(taskId: $taskId) {
+            title
+            description
+            backlog
+            priority
+            storyPoints
+        }
+    }
+`;
+
+export const GET_BACKLOG_TYPES = gql`
+    query getEnum {
+        __type(name: "Backlog") {
+            enumValues {
+                name
+            }
+        }
+    }
+`;
+
 export const MUTATE_TASKCARD_DND = gql`
     mutation mutateTaskCardDnd($updateColumnArray: [UpdateColumn]) {
         updateColumn(updateColumnArray: $updateColumnArray) {
@@ -51,6 +73,14 @@ export const MUTATE_ADD_COLUMN = gql`
 export const MUTATE_ADD_TASK = gql`
     mutation mutateAddTask($title: String!, $description: String, $projectId: ID!, $columnId: ID) {
         addTask(title: $title, description: $description, projectId: $projectId, columnId: $columnId) {
+            _id
+        }
+    }
+`;
+
+export const MUTATE_UPDATE_TASK_DETAIL = gql`
+    mutation mutateUpdateTaskDetail($taskId: ID!, $updateTaskObj: UpdateTask) {
+        updateTask(taskId: $taskId, updateTaskObj: $updateTaskObj) {
             _id
         }
     }
