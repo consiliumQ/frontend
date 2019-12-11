@@ -86,6 +86,14 @@ export const MUTATE_UPDATE_TASK_DETAIL = gql`
     }
 `;
 
+export const MUTATE_DELETE_TASK = gql`
+    mutation mutateDeleteTask($taskId: ID!) {
+        deleteTask(taskId: $taskId) {
+            _id
+        }
+    }
+`;
+
 export const GET_PROJECT_ID_FROM_CACHE = gql`
     query getProjectIdFromCache {
         project {

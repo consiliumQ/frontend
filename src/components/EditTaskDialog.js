@@ -24,7 +24,7 @@ export default function EditTaskDialog({ taskId, shouldEditTaskFormOpen, handleE
     const [updateTaskData, setUpdateTaskData] = useState({ ...EMPTY_DETAIL_TASK });
 
     useEffect(() => {
-        if (taskDetail) {
+        if (taskDetail && taskDetail.task) {
             const {
                 task: { __typename, ...task },
             } = taskDetail;

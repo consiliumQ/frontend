@@ -67,6 +67,7 @@ export default function TaskCard({ task }) {
                 handleEditTaskFormToggle={() => setEditTaskFormOpen(!shouldEditTaskFormOpen)}
             />
             <DeleteTaskAlertDialog
+                taskId={task._id}
                 shouldDeleteTaskAlertOpen={shouldDeleteTaskAlertOpen}
                 handleDeleteTaskFormToggle={() => setDeleteTaskFormOpen(!shouldDeleteTaskAlertOpen)}
             />
