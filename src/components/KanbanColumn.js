@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, List, ListSubheader, IconButton } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add, Delete, EditOutlined } from '@material-ui/icons';
 import { DnDTaskCard, TaskCard, AddTaskDialog } from '.';
+import DeleteColumnAlertDialog from './DeleteColumnAlertDialog';
+import EditColumnDialog from './EditColumnDialog';
 
 const useStyles = makeStyles(theme => ({
     kanbanColumn: {
@@ -50,6 +52,8 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
     const { tasks } = column;
     const classes = useStyles({ isLastColumn });
     const [shouldAddTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
+    const [shouldDeleteColumnDialogOpen, setDeleteColumnDialogOpen] = useState(false);
+    const [shouldEditColumnDialogOpen, setEditColumnDialogOpen] = useState(false);
 
     const ColumnHeader = () => (
         <ListSubheader className={classes.columnHeader} disableGutters>
@@ -62,6 +66,24 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
                 className={classes.addTaskCardButton}
             >
                 <Add className={classes.icon} />
+            </IconButton>
+            <IconButton
+                title={'edit this column'}
+                size={'small'}
+                variant={'contained'}
+                onClick={() => setEditColumnDialogOpen(!shouldEditColumnDialogOpen)}
+                className={classes.addTaskCardButton}
+            >
+                <EditOutlined className={classes.icon} />
+            </IconButton>
+            <IconButton
+                title={'remove this column'}
+                size={'small'}
+                variant={'contained'}
+                onClick={() => setDeleteColumnDialogOpen(!shouldDeleteColumnDialogOpen)}
+                className={classes.addTaskCardButton}
+            >
+                <Delete className={classes.icon} />
             </IconButton>
         </ListSubheader>
     );
@@ -83,6 +105,14 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
                 columnId={column._id}
                 shouldAddTaskDialogOpen={shouldAddTaskDialogOpen}
                 toggleAddTaskDialog={() => setAddTaskDialogOpen(!shouldAddTaskDialogOpen)}
+            />
+            <EditColumnDialog
+                shouldEditColumnDialogOpen={shouldEditColumnDialogOpen}
+                toggleEditColumnDialog={() => setEditColumnDialogOpen(!shouldEditColumnDialogOpen)}
+            />
+            <DeleteColumnAlertDialog
+                shouldDeleteColumnDialogOpen={shouldDeleteColumnDialogOpen}
+                handleDeleteColumnDialogToggle={() => setDeleteColumnDialogOpen(!shouldDeleteColumnDialogOpen)}
             />
         </>
     );
