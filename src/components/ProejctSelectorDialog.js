@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     },
     projectSelectButton: {
         display: 'flex',
-        padding: theme.spacing(1),
+        padding: theme.spacing(3),
         justifyContent: 'space-between',
         alignItems: 'center',
     },

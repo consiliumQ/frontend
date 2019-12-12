@@ -57,10 +57,6 @@ export default function AddColumnDialog({ shouldAddColumnFormOpen, handleAddColu
                             label="Description"
                             placeholder="Write a short description"
                             margin="normal"
-                            // not sure what this prop is for so I comment it out, feel free to comment it in
-                            // InputLabelProps={{
-                            //     shrink: true,
-                            // }}
                             variant="outlined"
                             rows={2}
                             rowsMax={2}
