@@ -1,10 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Avatar, Grid, Chip } from '@material-ui/core';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
 import AppsOutlinedIcon from '@material-ui/icons/AppsOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
+import { useQuery } from '@apollo/react-hooks';
+import { queries } from '../graphql';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 import mijeong from '../assets/images/mj.png';
 
@@ -37,11 +41,42 @@ const useStyles = makeStyles(theme => ({
 // Divide case into Loggedin, !Loggedin
 // Loggedin -> Actual Profile
 // !Loggedin -> Login/Signup button
-export default function SideBar(props) {
+export default function SideBar({ dndOperation, shouldSideBarOpen, toggleSideBar }) {
     const classes = useStyles();
+    const [userProjects, setUserProjects] = useState({ allProjects: [], currProject: { id: null, name: '' } });
+    const { data: userData, loading: userLoading } = useQuery(queries.GET_USER_INFO);
+    const { data: currProjectData, loading: currProjectLoading } = useQuery(queries.GET_PROJECT_INFO_FROM_CACHE);
+    const { refetch } = dndOperation;
+
+    useEffect(() => {
+        if (!userLoading && !currProjectLoading) {
+            const {
+                user: { projects },
+            } = userData;
+
+            const {
+                project: { _id: currProjectId, name: currProjectName },
+            } = currProjectData;
+
+            setUserProjects({
+                allProjects: projects.map(({ _id: projectId, name: projectName }) => ({
+                    projectId,
+                    projectName,
+                })),
+                currProject: { id: currProjectId, name: currProjectName },
+            });
+        }
+    }, [userData, currProjectData]);
+
+    useEffect(() => {
+        const { currProject } = userProjects;
+        if (currProject.id) {
+            refetch({ projectId: currProject.id });
+        }
+    }, [userProjects]);
 
     return (
-        <Drawer className={classes.drawer} open={props.shouldSideBarOpen} onClose={() => props.toggleSideBar()}>
+        <Drawer className={classes.drawer} open={shouldSideBarOpen} onClose={toggleSideBar}>
             <div className={classes.list} role={'presentation'}>
                 <Grid container justify={'center'} alignItems={'center'}>
                     <Avatar alt={'prettymj'} src={mijeong} className={classes.bigAvatar} />
@@ -51,24 +86,35 @@ export default function SideBar(props) {
                     <Chip className={classes.chip} label={'Overview'} />
                 </Grid>
                 <List>
-                    {['Visualization', 'Backlogs'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon className={classes.listItem}>
-                                {index % 2 === 0 ? <TimelineIcon /> : <AccountTreeOutlinedIcon />}
-                            </ListItemIcon>
-                            <ListItemText className={classes.listItem} primary={text} />
-                        </ListItem>
-                    ))}
+                    <ListItem button key="kanbanboard" className={classes.listItem} component={Link} to="/homepage" onClick={() => toggleSideBar()}>
+                        <ListItemIcon className={classes.listItem}>{<DashboardIcon />}</ListItemIcon>
+                        {'Kanban Board'}
+                    </ListItem>
+                    <ListItem button key="viz" className={classes.listItem}>
+                        <ListItemIcon className={classes.listItem}>{<TimelineIcon />}</ListItemIcon>
+                        {'Visualization'}
+                    </ListItem>
                 </List>
                 <Divider className={classes.divider} />
                 <Grid container justify={'center'} alignItems={'center'}>
-                    <Chip className={classes.chip} label={'Your Projects'} />
+                    <Chip className={classes.chip} label={'My Projects'} />
                 </Grid>
                 <List>
-                    {['Project1', 'Project'].map((text, index) => (
-                        <ListItem button key={text}>
+                    {/* <ListItem
+                        key="goToDashboard"
+                        className={classes.listItem}
+                        button
+                        component={Link}
+                        to="/dashboard"
+                        onClick={() => toggleSideBar()}
+                    >
+                        <ListItemIcon className={classes.listItem}>{<ExitToAppIcon />}</ListItemIcon>
+                        {'Go To Dashboard'}
+                    </ListItem> */}
+                    {userProjects.allProjects.map(({ projectId, projectName }) => (
+                        <ListItem key={projectId} className={classes.listItem}>
                             <ListItemIcon className={classes.listItem}>{<AppsOutlinedIcon />}</ListItemIcon>
-                            <ListItemText className={classes.listItem} primary={text} />
+                            {projectName}
                         </ListItem>
                     ))}
                 </List>
@@ -85,8 +131,3 @@ export default function SideBar(props) {
         </Drawer>
     );
 }
-
-SideBar.propTypes = {
-    shouldSideBarOpen: PropTypes.bool.isRequired,
-    toggleSideBar: PropTypes.func.isRequired,
-};

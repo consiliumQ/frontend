@@ -5,6 +5,15 @@ export const GET_PROJECT = gql`
         project(projectId: $projectId) {
             _id
             name
+            description
+            tasks {
+                _id
+                title
+                description
+                backlog
+                priority
+                storyPoints
+            }
             columns {
                 _id
                 name
@@ -129,6 +138,14 @@ export const GET_PROJECT_INFO_FROM_CACHE = gql`
 export const MUTATE_UPDATE_ONE_COLUMN = gql`
     mutation mutateUpdateOneColumn($columnId: ID!, $updateColumnObj: UpdateColumn) {
         updateOneColumn(columnId: $columnId, updateColumnObj: $updateColumnObj) {
+            _id
+        }
+    }
+`;
+
+export const MUTATE_DELETE_COLUMN = gql`
+    mutation mutateDeleteColumn($columnId: ID!) {
+        deleteColumn(columnId: $columnId) {
             _id
         }
     }
