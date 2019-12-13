@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, Avatar, Button, TextField, Link, Grid, Typography, Container, makeStyles } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { withAuth } from '@okta/okta-react';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -23,8 +24,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function SighUpDialog({ shouldSignInDialogOpen, toggleSignInDialog }) {
+export default function SignUpDialog({ auth, shouldSignInDialogOpen, toggleSignInDialog }) {
     const classes = useStyles();
+    const [authenticated, setAuthenticated] = useState(false);
+
+    async function checkAuthenticated() {
+        const loggedIn = await auth.isAuthenticated();
+
+        if (loggedIn !== authenticated) {
+            setAuthenticated(loggedIn);
+        }
+    }
 
     return (
         <Dialog open={shouldSignInDialogOpen} onClose={toggleSignInDialog}>
