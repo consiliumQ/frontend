@@ -60,6 +60,16 @@ export const GET_BACKLOG_TYPES = gql`
     }
 `;
 
+export const GET_COLUMN_DETAIL = gql`
+    query getColumnDetail($columnId: ID!) {
+        column(columnId: $columnId) {
+            name
+            description
+            tasks
+        }
+    }
+`;
+
 export const MUTATE_TASKCARD_DND = gql`
     mutation mutateTaskCardDnd($updateColumnArray: [UpdateColumn]) {
         updateColumn(updateColumnArray: $updateColumnArray) {
@@ -113,6 +123,23 @@ export const GET_PROJECT_INFO_FROM_CACHE = gql`
         project {
             _id
             name
+        }
+    }
+`;
+
+// this is to update title, description of column
+export const MUTATE_UPDATE_ONE_COLUMN = gql`
+    mutation mutateUpdateOneColumn($columnId: ID!, $updateColumnObj: UpdateColumn) {
+        updateOneColumn(columnId: $columnId, updateColumnObj: $updateColumnObj) {
+            _id
+        }
+    }
+`;
+
+export const MUTATE_DELETE_COLUMN = gql`
+    mutation mutateDeleteColumn($columnId: ID!) {
+        deleteColumn(columnId: $columnId) {
+            _id
         }
     }
 `;

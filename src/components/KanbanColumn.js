@@ -107,10 +107,12 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
                 toggleAddTaskDialog={() => setAddTaskDialogOpen(!shouldAddTaskDialogOpen)}
             />
             <EditColumnDialog
+                columnId={column._id}
                 shouldEditColumnDialogOpen={shouldEditColumnDialogOpen}
                 toggleEditColumnDialog={() => setEditColumnDialogOpen(!shouldEditColumnDialogOpen)}
             />
             <DeleteColumnAlertDialog
+                columnId={column._id}
                 shouldDeleteColumnDialogOpen={shouldDeleteColumnDialogOpen}
                 handleDeleteColumnDialogToggle={() => setDeleteColumnDialogOpen(!shouldDeleteColumnDialogOpen)}
             />

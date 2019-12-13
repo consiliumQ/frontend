@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, FormGroup, TextField, DialogActions, Button } from '@material-ui/core';
 
-export default function EditColumnDialog({ shouldEditColumnDialogOpen, toggleEditColumnDialog }) {
+export default function EditColumnDialog({ columnId, shouldEditColumnDialogOpen, toggleEditColumnDialog }) {
     return (
         <Dialog open={shouldEditColumnDialogOpen} onClose={toggleEditColumnDialog}>
             <DialogTitle>{'Edit Column'}</DialogTitle>
