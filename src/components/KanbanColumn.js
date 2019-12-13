@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles, List, ListSubheader, IconButton } from '@material-ui/core';
 import { Add, Delete, EditOutlined } from '@material-ui/icons';
 import { DnDTaskCard, TaskCard, AddTaskDialog } from '.';
-import DeleteColumnAlertDialog from './DeleteColumnAlertDialog';
+// import DeleteColumnAlertDialog from './DeleteColumnAlertDialog';
 import EditColumnDialog from './EditColumnDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +52,7 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
     const { tasks } = column;
     const classes = useStyles({ isLastColumn });
     const [shouldAddTaskDialogOpen, setAddTaskDialogOpen] = useState(false);
-    const [shouldDeleteColumnDialogOpen, setDeleteColumnDialogOpen] = useState(false);
+    // const [shouldDeleteColumnDialogOpen, setDeleteColumnDialogOpen] = useState(false);
     const [shouldEditColumnDialogOpen, setEditColumnDialogOpen] = useState(false);
 
     const ColumnHeader = () => (
@@ -76,7 +76,7 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
             >
                 <EditOutlined className={classes.icon} />
             </IconButton>
-            <IconButton
+            {/* <IconButton
                 title={'remove this column'}
                 size={'small'}
                 variant={'contained'}
@@ -84,7 +84,7 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
                 className={classes.addTaskCardButton}
             >
                 <Delete className={classes.icon} />
-            </IconButton>
+            </IconButton> */}
         </ListSubheader>
     );
 
@@ -111,11 +111,11 @@ export default function KanbanColumn({ isLastColumn, column, dndOperation, isPre
                 shouldEditColumnDialogOpen={shouldEditColumnDialogOpen}
                 toggleEditColumnDialog={() => setEditColumnDialogOpen(!shouldEditColumnDialogOpen)}
             />
-            <DeleteColumnAlertDialog
+            {/* <DeleteColumnAlertDialog
                 columnId={column._id}
                 shouldDeleteColumnDialogOpen={shouldDeleteColumnDialogOpen}
                 handleDeleteColumnDialogToggle={() => setDeleteColumnDialogOpen(!shouldDeleteColumnDialogOpen)}
-            />
+            /> */}
         </>
     );
 }

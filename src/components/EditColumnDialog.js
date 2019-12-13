@@ -13,7 +13,6 @@ export default function EditColumnDialog({ columnId, shouldEditColumnDialogOpen,
 
     useEffect(() => {
         if (columnDetail && columnDetail.column) {
-            console.log(columnDetail.column);
             const {
                 column: { __typename, ...column },
             } = columnDetail;
