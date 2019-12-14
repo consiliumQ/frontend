@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemIcon, makeStyles } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { useQuery } from '@apollo/react-hooks';
 import { queries } from '../graphql';
 import Transition from './common/TransitionEffect';
+import AddProjectDialog from './AddProjectDialog';
 
 const useStyles = makeStyles(theme => ({
     projectSelectorModal: {
@@ -27,6 +29,7 @@ export default function ProjectSelectorDialog({ dndOperation, shouldProjectSelec
     const { data: currProjectData, loading: currProjectLoading } = useQuery(queries.GET_PROJECT_INFO_FROM_CACHE);
     const { refetch } = dndOperation;
 
+    const [shouldAddProjectDialogOpen, setAddProjectDialogOpen] = useState(false);
     useEffect(() => {
         if (!userLoading && !currProjectLoading) {
             const {
@@ -59,10 +62,12 @@ export default function ProjectSelectorDialog({ dndOperation, shouldProjectSelec
     };
 
     return (
+        <>
         <Dialog open={shouldProjectSelectorOpen} onClose={toggleProjectSelector} TransitionComponent={Transition} maxWidth={'xs'} fullWidth>
             <DialogTitle className={classes.dialogTitle}>{'Select a project'}</DialogTitle>
             <DialogContent className={classes.projectSelectorModal}>
                 <List>
+                    <ListItem button onClick={() => setAddProjectDialogOpen(!shouldAddProjectDialogOpen)}className={classes.projectSelectButton}>Create Project<ListItemIcon><AddCircleOutlineIcon className={classes.icon} /></ListItemIcon></ListItem>
                     {userProjects.allProjects.map(({ projectId, projectName }) => (
                         <ListItem
                             key={projectId}
@@ -81,5 +86,7 @@ export default function ProjectSelectorDialog({ dndOperation, shouldProjectSelec
                 </List>
             </DialogContent>
         </Dialog>
+        <AddProjectDialog shouldAddProjectDialogOpen={shouldAddProjectDialogOpen} toggleAddProjectDialog={() => setAddProjectDialogOpen(!shouldAddProjectDialogOpen)} />
+        </>
     );
 }

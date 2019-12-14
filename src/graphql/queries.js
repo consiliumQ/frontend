@@ -34,6 +34,15 @@ export const GET_PROJECT = gql`
     }
 `;
 
+export const GET_PROJECTS_FROM_CACHE = gql`
+    query getProjectsFromCache($ownerId: ID!) {
+        projectsFromCache(ownerId: $ownerId) {
+            _id
+            name
+        }
+    }
+`;
+
 export const GET_USER_INFO = gql`
     query getUserInfo {
         user {
@@ -74,6 +83,23 @@ export const GET_COLUMN_DETAIL = gql`
         column(columnId: $columnId) {
             name
             description
+        }
+    }
+`;
+
+
+export const MUTATE_ADD_PROJECT = gql`
+    mutation mutateAddProject($name: String!, $ownerId: ID!, $description: String) {
+        addProject(name: $name, ownerId: $ownerId, description: $description) {
+            _id
+        }
+    }
+`;
+
+export const MUTATE_ADD_PROJECT_TO_CACHE = gql`
+    mutation mutateAddProjectToCache($name: String!, $ownerId: ID!) {
+        addProjectToCache(name: $name, ownerId: $ownerId) {
+            _id
         }
     }
 `;

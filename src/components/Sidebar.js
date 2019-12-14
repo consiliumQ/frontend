@@ -40,39 +40,26 @@ const useStyles = makeStyles(theme => ({
 // Divide case into Loggedin, !Loggedin
 // Loggedin -> Actual Profile
 // !Loggedin -> Login/Signup button
-export default function SideBar({ dndOperation, shouldSideBarOpen, toggleSideBar }) {
+export default function SideBar({ shouldSideBarOpen, toggleSideBar }) {
     const classes = useStyles();
-    const [userProjects, setUserProjects] = useState({ allProjects: [], currProject: { id: null, name: '' } });
+    const [currentUserId, setCurrentUserId] = useState('');
+    const [userProjects, setUserProjects] = useState([]);
     const { data: userData, loading: userLoading } = useQuery(queries.GET_USER_INFO);
-    const { data: currProjectData, loading: currProjectLoading } = useQuery(queries.GET_PROJECT_INFO_FROM_CACHE);
-    const { refetch } = dndOperation;
 
     useEffect(() => {
-        if (!userLoading && !currProjectLoading) {
-            const {
-                user: { projects },
-            } = userData;
-
-            const {
-                project: { _id: currProjectId, name: currProjectName },
-            } = currProjectData;
-
-            setUserProjects({
-                allProjects: projects.map(({ _id: projectId, name: projectName }) => ({
-                    projectId,
-                    projectName,
-                })),
-                currProject: { id: currProjectId, name: currProjectName },
-            });
+        if (!userLoading) {
+           const { user: { _id } } = userData;
+           setCurrentUserId(_id);
         }
-    }, [userData, currProjectData]);
+    }, [userData]);
+
+    const { data: projectData, loading: projectDataLoading } = useQuery(queries.GET_PROJECTS_FROM_CACHE, {variables: { ownerId: currentUserId }} );
 
     useEffect(() => {
-        const { currProject } = userProjects;
-        if (currProject.id) {
-            refetch({ projectId: currProject.id });
+        if (!projectDataLoading) {
+            setUserProjects(projectData.projectsFromCache)
         }
-    }, [userProjects]);
+    }, [projectData])
 
     return (
         <Drawer className={classes.drawer} open={shouldSideBarOpen} onClose={toggleSideBar}>
@@ -99,22 +86,11 @@ export default function SideBar({ dndOperation, shouldSideBarOpen, toggleSideBar
                     <Chip className={classes.chip} label={'My Projects'} />
                 </Grid>
                 <List>
-                    {/* <ListItem
-                        key="goToDashboard"
-                        className={classes.listItem}
-                        button
-                        component={Link}
-                        to="/dashboard"
-                        onClick={() => toggleSideBar()}
-                    >
-                        <ListItemIcon className={classes.listItem}>{<ExitToAppIcon />}</ListItemIcon>
-                        {'Go To Dashboard'}
-                    </ListItem> */}
-                    {userProjects.allProjects.map(({ projectId, projectName }) => (
-                        <ListItem key={projectId} className={classes.listItem}>
-                            <ListItemIcon className={classes.listItem}>{<AppsOutlinedIcon />}</ListItemIcon>
-                            {projectName}
-                        </ListItem>
+                    {userProjects.map(({ _id, name }) => (
+                       <ListItem key={_id} className={classes.listItem}>
+                       <ListItemIcon className={classes.listItem}>{<AppsOutlinedIcon />}</ListItemIcon>
+                       {name}
+                        </ListItem> 
                     ))}
                 </List>
                 <Divider className={classes.divider} />

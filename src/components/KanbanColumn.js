@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { makeStyles, List, ListSubheader, IconButton } from '@material-ui/core';
 import { Add, Delete, EditOutlined } from '@material-ui/icons';
 import { DnDTaskCard, TaskCard, AddTaskDialog } from '.';
-// import DeleteColumnAlertDialog from './DeleteColumnAlertDialog';
 import EditColumnDialog from './EditColumnDialog';
 
 const useStyles = makeStyles(theme => ({
