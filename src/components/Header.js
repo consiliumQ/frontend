@@ -4,7 +4,7 @@ import { Menu } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { ProjectSelectorDialog } from '.';
 import SignInDialog from './SignInDialog';
-import ProjectDashboardDialog from './ProjectDashboardDialog';
+// import ProjectDashboardDialog from './ProjectDashboardDialog';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,7 +39,7 @@ export default function Header({ dndOperation, onMenuIconClicked }) {
     const appBarRef = useRef(null);
     const classes = useStyles();
     const [shouldProjectSelectorOpen, setProjectSelectorOpen] = useState(false);
-    const [shouldProjectDashboardOpen, setProjectDashboardOpen] = useState(false);
+    // const [shouldProjectDashboardOpen, setProjectDashboardOpen] = useState(false);
     const [shouldSignInDialogOpen, setSignInDialogOpen] = useState(false);
 
     return (
@@ -56,9 +56,9 @@ export default function Header({ dndOperation, onMenuIconClicked }) {
                     <Button variant={'contained'} onClick={() => setProjectSelectorOpen(!shouldProjectSelectorOpen)} className={classes.button}>
                         {'Select Project'}
                     </Button>
-                    <Button variant={'contained'} onClick={() => setProjectDashboardOpen(!shouldProjectDashboardOpen)} className={classes.button}>
+                    {/* <Button variant={'contained'} onClick={() => setProjectDashboardOpen(!shouldProjectDashboardOpen)} className={classes.button}>
                         {'Dashboard'}
-                    </Button>
+                    </Button> */}
                     <Button variant={'contained'} onClick={() => setSignInDialogOpen(!shouldSignInDialogOpen)} className={classes.button}>
                         {'Temp SignIn button'}
                     </Button>

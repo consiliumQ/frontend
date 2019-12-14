@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import HomePage from './HomePage/HomePage';
-import DashboardPage from './DashboardPage/DashboardPage';
 
 export default function ConsiliumQRouter() {
     return (
@@ -12,7 +11,6 @@ export default function ConsiliumQRouter() {
                 <Route path={'/user'} component={() => <h1>TODO: User DashBoard</h1>} />
                 <Route path={'/kanban'} component={() => <h1>TODO: Kanban board</h1>} />
                 <Route path={'/homepage'} component={() => <HomePage />} />
-                <Route path={'/dashboard'} component={() => <DashboardPage />} />
             </Switch>
         </Router>
     );

@@ -7,7 +7,6 @@ import AppsOutlinedIcon from '@material-ui/icons/AppsOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import { useQuery } from '@apollo/react-hooks';
 import { queries } from '../graphql';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 
 import mijeong from '../assets/images/mj.png';
