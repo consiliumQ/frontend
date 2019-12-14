@@ -5,7 +5,7 @@ import HomePage from './HomePage/HomePage';
 
 const OktaConfig = {
     clientId: `${process.env.REACT_APP_OKTA_CLIENT_ID}`,
-    issuer: `https://${process.env.REACT_APP_OKTA_DOMAIN}/oauth2/default`,
+    issuer: `${process.env.REACT_APP_OKTA_DOMAIN}/oauth2/default`,
     redirectUri: `${Location.host}${process.env.REACT_APP_OKTA_CALLBACK_PATH}`,
     scopes: process.env.REACT_APP_OKTA_SCOPES,
     pkce: true,
