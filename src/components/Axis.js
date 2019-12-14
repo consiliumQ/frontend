@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { select, selectAll } from 'd3-selection';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { transition } from 'd3-transition';

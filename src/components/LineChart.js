@@ -2,13 +2,14 @@
 import React, { Component } from 'react';
 import { scaleLinear, scaleBand } from 'd3-scale';
 import { line, curveMonotoneX } from 'd3-shape';
+import propTypes from 'prop-types';
 import { extent } from 'd3-array';
 import { transition } from 'd3-transition';
 
 import XYAxis from './XYAxis';
 import Line from './Line';
 
-class LineChart extends React.Component {
+class LineChart extends Component {
     constructor() {
         super();
         this.state = {
@@ -58,4 +59,8 @@ class LineChart extends React.Component {
         );
     }
 }
+LineChart.propTypes = {
+    // eslint-disable-next-line react/no-unused-prop-types
+    data: propTypes.arrayOf(propTypes.object).isRequired,
+};
 export default LineChart;

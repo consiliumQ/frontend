@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { scaleLinear } from 'd3-scale';
-import { max, extent } from 'd3-array';
 import { scaleBand } from 'd3';
 import propTypes from 'prop-types';
 import { select } from 'd3-selection';
