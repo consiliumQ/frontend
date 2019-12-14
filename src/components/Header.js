@@ -1,7 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { AppBar, Toolbar, IconButton, Button, makeStyles } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import PropTypes from 'prop-types';
+import { ProjectSelectorDialog } from '.';
+import SignInDialog from './SignInDialog';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,17 +27,18 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             backgroundColor: theme.palette.primary.light,
         },
+        marginRight: theme.spacing(1),
     },
     icon: {
         color: theme.palette.primary.contrastText,
     },
 }));
 
-export default function Header(props) {
+export default function Header({ dndOperation, onMenuIconClicked }) {
     const appBarRef = useRef(null);
     const classes = useStyles();
-
-    const { onMenuIconClicked } = props;
+    const [shouldProjectSelectorOpen, setProjectSelectorOpen] = useState(false);
+    const [shouldSignInDialogOpen, setSignInDialogOpen] = useState(false);
 
     return (
         <React.Fragment>
@@ -45,15 +48,23 @@ export default function Header(props) {
                         <Menu className={classes.icon} />
                     </IconButton>
                     <h1>
-                        <span style={{ fontWeight: 100 }}>consiliumQ</span>
+                        <span style={{ fontWeight: 100 }}>{'consiliumQ'}</span>
                     </h1>
                     <div className={classes.spacer} />
-                    <Button variant={'contained'} onClick={() => console.log('should open dialog')} className={classes.button}>
-                        {'Placeholder'}
+                    <Button variant={'contained'} onClick={() => setProjectSelectorOpen(!shouldProjectSelectorOpen)} className={classes.button}>
+                        {'Select Project'}
+                    </Button>
+                    <Button variant={'contained'} onClick={() => setSignInDialogOpen(!shouldSignInDialogOpen)} className={classes.button}>
+                        {'Temp SignIn button'}
                     </Button>
                 </Toolbar>
             </AppBar>
-            {/* <Toolbar style={{ height: appBarRef.height }} /> */}
+            <ProjectSelectorDialog
+                dndOperation={dndOperation}
+                shouldProjectSelectorOpen={shouldProjectSelectorOpen}
+                toggleProjectSelector={() => setProjectSelectorOpen(!shouldProjectSelectorOpen)}
+            />
+            <SignInDialog shouldSignInDialogOpen={shouldSignInDialogOpen} toggleSignInDialog={() => setSignInDialogOpen(!shouldSignInDialogOpen)} />
         </React.Fragment>
     );
 }

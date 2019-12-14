@@ -1,42 +1,58 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, createContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { queries } from '../graphql';
 
 /**
- * - `{ type: MOVE_CARD, data: { dragColIdx, dropColIdx, dragIdx, dropIdx }  }`
- * - `{ type: MOVE_COLUMN, data: { dragColIdx, dropColIdx } }`
+ * - `{ type: MOVE_CARD_ON_CARD, data: { dragColId, dropColId, dragId, dropId }  }`
+ * - `{ type: MOVE_COLUMN, data: { dragColId, dropColId } }`
  */
 const types = {
-    MOVE_CARD: 'move_card',
-    MOVE_COLUMNS: 'move_columns',
+    MOVE_CARD_ON_CARD: 'move_card_on_card',
+    MOVE_CARD_ON_LIST: 'move_card_on_list',
+    MOVE_COLUMN: 'move_column',
 };
+
+const ColumnsState = createContext(null);
 
 const moveCardReducer = (state, action) => {
     const newState = [...state];
-    const { dragColIdx, dropColIdx, dragIdx, dropIdx } = action.data;
+    const { dragId, dropId, dragColId, dropColId } = action.data;
+
+    const dragColIndex = dragColId
+        ? newState.findIndex(c => c._id === dragColId)
+        : dragId && newState.findIndex(c => c.tasks.find(t => t._id === dragId));
+    const dropColIndex = dropColId
+        ? newState.findIndex(c => c._id === dropColId)
+        : dropId && newState.findIndex(c => c.tasks.find(t => t._id === dropId));
+
+    const dragIndex = dragId && newState[dragColIndex].tasks.findIndex(t => t._id === dragId);
+    const dropIndex = dropId && newState[dropColIndex].tasks.findIndex(t => t._id === dropId);
+
     switch (action.type) {
-        case types.MOVE_CARD:
-            if (dragColIdx === dropColIdx) {
-                newState[dragColIdx].tasks.splice(dropIdx, 0, newState[dragColIdx].tasks.splice(dragIdx, 1)[0]);
+        case types.MOVE_CARD_ON_CARD:
+            if (dragColIndex === dropColIndex) {
+                newState[dragColIndex].tasks.splice(dropIndex, 0, newState[dragColIndex].tasks.splice(dragIndex, 1)[0]);
             } else {
-                newState[dropColIdx].tasks.splice(dropIdx, 0, newState[dragColIdx].tasks[dragIdx]);
-                newState[dragColIdx].tasks.splice(dragIdx, 1);
+                newState[dropColIndex].tasks.splice(dropIndex, 0, newState[dragColIndex].tasks[dragIndex]);
+                newState[dragColIndex].tasks.splice(dragIndex, 1);
             }
             return newState;
-        case types.MOVE_COLUMNS:
-            newState.splice(dropColIdx, 0, newState.splice(dragColIdx, 1));
+        case types.MOVE_CARD_ON_LIST:
+            newState[dropColIndex].tasks.push(newState[dragColIndex].tasks[dragIndex]);
+            newState[dragColIndex].tasks.splice(dragIndex, 1);
             return newState;
-        case 'init':
+        case types.MOVE_COLUMN:
+            newState.splice(dropColIndex, 0, newState.splice(dragColIndex, 1)[0]);
+            return newState;
+        case 'init': // hope there is a cleaner way to update the data...
             return action.data;
         default:
             return state;
     }
 };
 
-// const useTaskCardDnDReducer = () => useReducer(moveCardReducer, INITIAL_STATE);
-
 export default function useDndOperation() {
-    const { data } = useQuery(queries.GET_PROJECT);
+    const { data, refetch } = useQuery(queries.GET_PROJECT, { pollInterval: 500 });
     const [columnsState, dispatchDnd] = useReducer(moveCardReducer, []);
 
     useEffect(() => {
@@ -45,5 +61,5 @@ export default function useDndOperation() {
         }
     }, [data]);
 
-    return [columnsState, dispatchDnd, types];
+    return [columnsState, { dispatchDnd, refetch, types, ColumnsState }];
 }

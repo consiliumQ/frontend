@@ -1,8 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Card, CardContent, CardActions, IconButton, makeStyles } from '@material-ui/core';
-import { EditOutlined, MoreVertOutlined } from '@material-ui/icons';
-import { tasks } from '../assets/DummyData';
+import { EditOutlined, Delete } from '@material-ui/icons';
+import { EditTaskDialog, DeleteTaskAlertDialog } from '.';
 
 const useStyles = makeStyles(theme => ({
     cardContainer: {
@@ -36,25 +35,42 @@ const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.primary.contrastText,
     },
+    editTaskModal: {
+        minWidth: theme.modalWidth,
+    },
 }));
 
 export default function TaskCard({ task }) {
     const classes = useStyles();
+    const [shouldEditTaskFormOpen, setEditTaskFormOpen] = useState(false);
+    const [shouldDeleteTaskAlertOpen, setDeleteTaskFormOpen] = useState(false);
 
     return (
-        <Card className={classes.cardContainer}>
-            <CardContent className={classes.cardContent}>
-                <h3>{task.title}</h3>
-                <p>{task.description}</p>
-            </CardContent>
-            <CardActions classes={{ root: classes.iconPosition }}>
-                <IconButton size={'small'} onClick={() => console.log('icon button clicked!')}>
-                    <EditOutlined className={classes.icon} />
-                </IconButton>
-                <IconButton size={'small'} onClick={() => console.log('icon button click')}>
-                    <MoreVertOutlined className={classes.icon} />
-                </IconButton>
-            </CardActions>
-        </Card>
+        <>
+            <Card className={classes.cardContainer}>
+                <CardContent className={classes.cardContent}>
+                    <h3>{task.title}</h3>
+                    <p>{task.description}</p>
+                </CardContent>
+                <CardActions classes={{ root: classes.iconPosition }}>
+                    <IconButton size={'small'} onClick={() => setEditTaskFormOpen(!shouldEditTaskFormOpen)}>
+                        <EditOutlined className={classes.icon} />
+                    </IconButton>
+                    <IconButton size={'small'} onClick={() => setDeleteTaskFormOpen(!shouldDeleteTaskAlertOpen)}>
+                        <Delete className={classes.icon} />
+                    </IconButton>
+                </CardActions>
+            </Card>
+            <EditTaskDialog
+                taskId={task._id}
+                shouldEditTaskFormOpen={shouldEditTaskFormOpen}
+                handleEditTaskFormToggle={() => setEditTaskFormOpen(!shouldEditTaskFormOpen)}
+            />
+            <DeleteTaskAlertDialog
+                taskId={task._id}
+                shouldDeleteTaskAlertOpen={shouldDeleteTaskAlertOpen}
+                handleDeleteTaskFormToggle={() => setDeleteTaskFormOpen(!shouldDeleteTaskAlertOpen)}
+            />
+        </>
     );
 }

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import { useDndOperation, useBoardHeight } from '../hooks';
-import { DnDColumn } from '.';
+import { useBoardHeight } from '../hooks';
+import { DnDColumn, CustomDragLayer, AddColumnDialog } from '.';
 
 const useStyles = makeStyles(theme => ({
     horizontalColumnList: {
@@ -32,31 +32,51 @@ const useStyles = makeStyles(theme => ({
         borderRight: `1px solid ${theme.palette.primary.light}`,
         display: 'flex',
     },
+    addColumnModalContent: {
+        minWidth: theme.modalWidth,
+    },
+    paper: {},
+    projectToolBar: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+        borderBottom: `1px solid ${theme.palette.primary.light}`,
+    },
 }));
 
-function KanbanBoard() {
-    // TODO: receive data from GraphQL server
-
+function KanbanBoard({ dndOperation }) {
     const classes = useStyles();
     const boardHeight = useBoardHeight();
-    const [columnsState, dispatchDnd, types] = useDndOperation();
+    const columnsState = useContext(dndOperation.ColumnsState);
+    const [shouldAddColumnFormOpen, setAddColumnFormOpen] = useState(false);
 
     return (
-        <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
-            {columnsState.map((column, index) => (
-                <DnDColumn key={column._id} isLastColumn={index === columnsState.length - 1} column={column} />
-            ))}
-            <div className={classes.buttonColumn}>
-                <Button
-                    startIcon={<Add />}
-                    variant={'contained'}
-                    onClick={() => console.log('Add Column Button Click!')}
-                    className={classes.addColumnButton}
-                >
-                    {'Add Column'}
-                </Button>
+        <>
+            <div className={classes.horizontalColumnList} style={{ height: boardHeight }}>
+                {columnsState.map((column, columnIdx) => (
+                    <DnDColumn
+                        isLastColumn={columnIdx === columnsState.length - 1}
+                        column={column}
+                        columnIdx={columnIdx}
+                        dndOperation={dndOperation}
+                    />
+                ))}
+                <div className={classes.buttonColumn}>
+                    <Button
+                        startIcon={<Add />}
+                        variant={'contained'}
+                        onClick={() => setAddColumnFormOpen(!shouldAddColumnFormOpen)}
+                        className={classes.addColumnButton}
+                    >
+                        {'Add Column'}
+                    </Button>
+                </div>
             </div>
-        </div>
+            <AddColumnDialog
+                shouldAddColumnFormOpen={shouldAddColumnFormOpen}
+                handleAddColumnToggle={() => setAddColumnFormOpen(!shouldAddColumnFormOpen)}
+            />
+            <CustomDragLayer columnsState={columnsState} />
+        </>
     );
 }
 
