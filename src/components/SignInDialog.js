@@ -19,6 +19,7 @@ function onSuccess(res) {
     // The user can be in another authentication state that requires further action.
     // For more information about these states, see:
     //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
+    toggleSignInDialog();
 }
 
 function onError(err) {
@@ -40,7 +41,7 @@ function onError(err) {
     <Dialog open={shouldSignInDialogOpen} onClose={toggleSignInDialog}>
         <DialogContent>
         {authenticated ? (
-                    <Redirect to={{ pathname: '/' }} />
+                    <Redirect to={{ pathname: '/homepage' }} />
                 ) : (
                     <OktaSignInWidget baseUrl={process.env.REACT_APP_OKTA_DOMAIN} onSuccess={onSuccess} onError={onError} />)}
         </DialogContent>
