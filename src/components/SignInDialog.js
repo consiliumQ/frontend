@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState, useCallback} from 'react';
 import { Dialog, DialogContent, Avatar, Button, TextField, Link, Grid, Typography, Container, makeStyles } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { withAuth } from '@okta/okta-react';
-import { Redirect } from 'react-router-dom';
-import OktaSignInWidget from './OktaSignInWidget';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -26,107 +23,103 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default withAuth(function SignUpDialog({ auth, shouldSignInDialogOpen, toggleSignInDialog }) {
+export default function SignUpDialog({ shouldSignInDialogOpen, toggleSignInDialog }) {
     const classes = useStyles();
-    const [authenticated, setAuthenticated] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const usernameCB = useCallback(e => setUsername(e.target.value), []);
+    const passwordCB = useCallback(e => setPassword(e.target.value), []);
+    const basicAuth = Buffer.from([process.env.REACT_APP_OKTA_CLIENT_ID, process.env.REACT_APP_OKTA_CLIENT_SECRET].join(':')).toString('base64');
 
-    function onSuccess(res) {
-        console.log(res);
-        if (res.status === 'SUCCESS') {
-            console.log(auth);
-            return auth.redirect({
-                sessionToken: res.session.token,
-            });
+    async function loginFormSubmit() {
+        const response = await fetch(`${process.env.REACT_APP_OKTA_DOMAIN}/oauth2/default/v1/token`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Basic ${basicAuth}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                username,
+                password,
+                grant_type: 'password',
+                scope: 'openid',
+            }).toString(),
+        });
+
+        const { error_description: errorDescription, access_token: accessToken } = await response.json();
+
+        if (errorDescription) {
+            console.log(errorDescription);
         }
-        // The user can be in another authentication state that requires further action.
-        // For more information about these states, see:
-        //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
+        console.log(accessToken);
+        localStorage.setItem(process.env.REACT_APP_STORAGE_TOKEN, accessToken);
     }
-
-    function onError(err) {
-        console.log('error logging in', err);
-    }
-
-    useEffect(() => {
-        async function checkAuthenticated() {
-            const loggedIn = await auth.isAuthenticated();
-
-            if (loggedIn !== authenticated) {
-                setAuthenticated(loggedIn);
-            }
-        }
-        checkAuthenticated().then();
-    }, []);
 
     return (
         <Dialog open={shouldSignInDialogOpen} onClose={toggleSignInDialog}>
             <DialogContent>
-                {authenticated ? (
-                    <Redirect to={{ pathname: '/' }} />
-                ) : (
-                    <OktaSignInWidget baseUrl={process.env.REACT_APP_OKTA_DOMAIN} onSuccess={onSuccess} onError={onError} />
-                )}
-                {/* <Container component="main" maxWidth="xs"> */}
-                {/*    <div className={classes.paper}> */}
-                {/*        <Avatar className={classes.avatar}> */}
-                {/*            <LockOutlinedIcon /> */}
-                {/*        </Avatar> */}
-                {/*        <Typography component="h1" variant="h5"> */}
-                {/*            Sign in */}
-                {/*        </Typography> */}
-                {/*        <form className={classes.form} noValidate> */}
-                {/*            <TextField */}
-                {/*                variant="outlined" */}
-                {/*                margin="normal" */}
-                {/*                required */}
-                {/*                fullWidth */}
-                {/*                id="email" */}
-                {/*                label="Email Address" */}
-                {/*                name="email" */}
-                {/*                autoComplete="email" */}
-                {/*                autoFocus */}
-                {/*            /> */}
-                {/*            <TextField */}
-                {/*                variant="outlined" */}
-                {/*                margin="normal" */}
-                {/*                required */}
-                {/*                fullWidth */}
-                {/*                id="username" */}
-                {/*                label="Username" */}
-                {/*                name="username" */}
-                {/*                autoComplete="username" */}
-                {/*                autoFocus */}
-                {/*            /> */}
-                {/*            <TextField */}
-                {/*                variant="outlined" */}
-                {/*                margin="normal" */}
-                {/*                required */}
-                {/*                fullWidth */}
-                {/*                name="password" */}
-                {/*                label="Password" */}
-                {/*                type="password" */}
-                {/*                id="password" */}
-                {/*                autoComplete="current-password" */}
-                {/*            /> */}
-                {/*            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}> */}
-                {/*                Sign In */}
-                {/*            </Button> */}
-                {/*            <Grid container> */}
-                {/*                <Grid item xs> */}
-                {/*                    <Link href="#" variant="body2"> */}
-                {/*                        Forgot password? */}
-                {/*                    </Link> */}
-                {/*                </Grid> */}
-                {/*                <Grid item> */}
-                {/*                    <Link href="#" variant="body2"> */}
-                {/*                        {"Don't have an account? Sign Up"} */}
-                {/*                    </Link> */}
-                {/*                </Grid> */}
-                {/*            </Grid> */}
-                {/*        </form> */}
-                {/*    </div> */}
-                {/* </Container> */}
+                <Container component="main" maxWidth="xs">
+                    <div className={classes.paper}>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <form className={classes.form} noValidate>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
+                                autoFocus
+                                onChange={usernameCB}
+                            />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                onChange={passwordCB}
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                                onClick={async () => {
+                                    await loginFormSubmit();
+                                }}
+                            >
+                                Sign In
+                            </Button>
+                            <Grid container>
+                                <Grid item xs>
+                                    <Link href="#" variant="body2">
+                                        Forgot password?
+                                    </Link>
+                                </Grid>
+                                <Grid item>
+                                    <Link href="#" variant="body2">
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </div>
+                </Container>
             </DialogContent>
         </Dialog>
     );
-});
+}
