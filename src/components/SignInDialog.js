@@ -15,11 +15,13 @@ function onSuccess(res) {
         return auth.redirect({
             sessionToken: res.session.token,
         });
+       
     }
     // The user can be in another authentication state that requires further action.
     // For more information about these states, see:
     //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
-    toggleSignInDialog();
+     setAuthenticated(true);
+       toggleSignInDialog();
 }
 
 function onError(err) {
@@ -32,6 +34,7 @@ function onError(err) {
 
             if (loggedIn !== authenticated) {
                 setAuthenticated(loggedIn);
+                console.log(authenticated)
             }
         }
         checkAuthenticated().then();

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Avatar, Grid, Chip } from '@material-ui/core';
 import TimelineIcon from '@material-ui/icons/Timeline';
-import AccountTreeOutlinedIcon from '@material-ui/icons/AccountTreeOutlined';
 import AppsOutlinedIcon from '@material-ui/icons/AppsOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import { useQuery } from '@apollo/react-hooks';

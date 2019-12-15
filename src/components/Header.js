@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { AppBar, Toolbar, IconButton, Button, makeStyles } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import { ProjectSelectorDialog } from '.';
 import SignInDialog from './SignInDialog';
+import { withAuth } from '@okta/okta-react';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -34,11 +35,25 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Header({ dndOperation, onMenuIconClicked }) {
+export default withAuth(function Header({ auth, dndOperation, onMenuIconClicked }) {
     const appBarRef = useRef(null);
     const classes = useStyles();
     const [shouldProjectSelectorOpen, setProjectSelectorOpen] = useState(false);
     const [shouldSignInDialogOpen, setSignInDialogOpen] = useState(false);
+    const [authenticated, setAuthenticated] = useState(false);
+    // console.log(authenticated);
+
+
+    useEffect(() => {
+        async function checkAuthenticated() {
+            const loggedIn = await auth.isAuthenticated();
+
+            if (loggedIn !== authenticated) {
+                setAuthenticated(loggedIn);
+            }
+        }
+        checkAuthenticated().then();
+    }, []);
 
     return (
         <React.Fragment>
@@ -54,9 +69,12 @@ export default function Header({ dndOperation, onMenuIconClicked }) {
                     <Button variant={'contained'} onClick={() => setProjectSelectorOpen(!shouldProjectSelectorOpen)} className={classes.button}>
                         {'Select Project'}
                     </Button>
-                    <Button variant={'contained'} onClick={() => setSignInDialogOpen(!shouldSignInDialogOpen)} className={classes.button}>
-                        {'Temp SignIn button'}
-                    </Button>
+                    {authenticated ? (<Button variant={'contained'} onClick={() => setSignInDialogOpen(!shouldSignInDialogOpen)} className={classes.button}>
+                        {'Sign Out'}
+                    </Button>):(<Button variant={'contained'} onClick={() => setSignInDialogOpen(!shouldSignInDialogOpen)} className={classes.button}>
+                        {'Sign In'}
+                    </Button>)}
+                   
                 </Toolbar>
             </AppBar>
             <ProjectSelectorDialog
@@ -67,8 +85,8 @@ export default function Header({ dndOperation, onMenuIconClicked }) {
             <SignInDialog shouldSignInDialogOpen={shouldSignInDialogOpen} toggleSignInDialog={() => setSignInDialogOpen(!shouldSignInDialogOpen)} />
         </React.Fragment>
     );
-}
+});
 
-Header.propTypes = {
-    onMenuIconClicked: PropTypes.func.isRequired,
-};
+// Header.propTypes = {
+//     onMenuIconClicked: PropTypes.func.isRequired,
+// };
