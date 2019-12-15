@@ -76,14 +76,14 @@ export default function SideBar({ shouldSideBarOpen, toggleSideBar }) {
                         <ListItemIcon className={classes.listItem}>{<DashboardIcon />}</ListItemIcon>
                         {'Kanban Board'}
                     </ListItem>
-                    <ListItem button key="viz" className={classes.listItem}>
+                    <ListItem button key="viz" className={classes.listItem} component={Link} to="/viz" onClick={() => toggleSideBar()}>
                         <ListItemIcon className={classes.listItem}>{<TimelineIcon />}</ListItemIcon>
                         {'Visualization'}
                     </ListItem>
                 </List>
                 <Divider className={classes.divider} />
                 <Grid container justify={'center'} alignItems={'center'}>
-                    <Chip className={classes.chip} label={'My Projects'} />
+                    <Chip className={classes.chip} label={'My Project List'} />
                 </Grid>
                 <List>
                     {userProjects.map(({ _id, name }) => (

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { Security, ImplicitCallback } from '@okta/okta-react';
 import HomePage from './HomePage/HomePage';
+import VisualizationPage from './VisualizationPage/VisualizationPage';
 
 const OktaConfig = {
     clientId: `${process.env.REACT_APP_OKTA_CLIENT_ID}`,
@@ -18,9 +19,8 @@ export default function ConsiliumQRouter() {
             <Security {...OktaConfig}>
                 <Switch>
                     <Route exact path={'/'} component={() => <Redirect to={'/homepage'} />} />
-                    <Route path={'/user'} component={() => <h1>TODO: User DashBoard</h1>} />
-                    <Route path={'/kanban'} component={() => <h1>TODO: Kanban board</h1>} />
                     <Route path={'/homepage'} component={() => <HomePage />} />
+                    <Route path={'/viz'} component={() => <VisualizationPage />} />
                 </Switch>
             </Security>
         </Router>
