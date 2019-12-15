@@ -43,7 +43,6 @@ export default withAuth(function Header({ auth, dndOperation, onMenuIconClicked 
     const [authenticated, setAuthenticated] = useState(false);
     // console.log(authenticated);
 
-
     useEffect(() => {
         async function checkAuthenticated() {
             const loggedIn = await auth.isAuthenticated();
@@ -86,7 +85,3 @@ export default withAuth(function Header({ auth, dndOperation, onMenuIconClicked 
         </React.Fragment>
     );
 });
-
-// Header.propTypes = {
-//     onMenuIconClicked: PropTypes.func.isRequired,
-// };

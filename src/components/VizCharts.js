@@ -35,9 +35,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+   const state = {
+      data: [10, 4, 7, 3, 9, 10],
+      width: 700,
+      height: 500
+    };
 
 export default function VizChart() {
     const classes = useStyles();
+
+ 
     return (
         <>
         <AppBar position="relative">
@@ -81,7 +88,7 @@ export default function VizChart() {
               <Grid item key="text" xs={12} sm={6} md={6}>
                 <Card className={classes.card}>
                 <CardContent className={classes.cardChart}>
-                    <BarChart />
+                    <BarChart data={state.data} width={state.width} height={state.height} />
                   </CardContent>
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
